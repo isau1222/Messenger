@@ -36,6 +36,9 @@
       <HintPath>..\..\ClassLibraryMessenger\ClassLibraryMessenger\bin\Debug\ClassLibraryMessenger.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\MySql\v4.5\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />

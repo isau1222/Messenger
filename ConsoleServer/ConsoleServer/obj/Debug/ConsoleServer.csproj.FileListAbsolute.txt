@@ -12,3 +12,6 @@ D:\Учебка\практика\ConsoleServer\ConsoleServer\bin\Debug\ConsoleSe
 D:\Учебка\практика\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.csprojResolveAssemblyReference.cache
 D:\Учебка\практика\ConsoleServer\ConsoleServer\bin\Debug\ClassLibraryMessenger.dll
 D:\Учебка\практика\ConsoleServer\ConsoleServer\bin\Debug\ClassLibraryMessenger.pdb
+C:\Users\criit\Documents\GitHub\Messenger\ConsoleServer\ConsoleServer\bin\Debug\ConsoleServer.exe.config
+C:\Users\criit\Documents\GitHub\Messenger\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.exe
+C:\Users\criit\Documents\GitHub\Messenger\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.pdb
