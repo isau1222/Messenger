@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleServer
+{
+    [Serializable()]
+    public class Message : Object
+    {
+        public string clientName;
+        public string text;
+        //public Image image;
+
+        public Message(string _clientName, string _text)
+        {
+            clientName = _clientName;
+            text = _text;
+        }
+
+        //public Message(string _clientName, string _text, Image _image)
+        //{
+        //    clientName = _clientName;
+        //    text = _text;
+        //    image = _image;
+        //}
+
+        public static byte[] ObjectToByteArray(object obj)
+        {
+            if (obj == null)
+                return null;
+            BinaryFormatter bf = new BinaryFormatter();
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bf.Serialize(ms, obj);
+                return ms.ToArray();
+            }
+        }
+
+        public static Object ByteArrayToObject(byte[] arrBytes)
+        {
+            MemoryStream memStream = new MemoryStream();
+            BinaryFormatter binForm = new BinaryFormatter();
+            memStream.Write(arrBytes, 0, arrBytes.Length);
+            memStream.Seek(0, SeekOrigin.Begin);
+            Object obj = (Object)binForm.Deserialize(memStream);
+
+            return obj;
+        }
+    }
+}

@@ -1,0 +1,5 @@
+D:\Учебка\практика\ClassLibraryMessenger\ClassLibraryMessenger\bin\Debug\ClassLibraryMessenger.dll
+D:\Учебка\практика\ClassLibraryMessenger\ClassLibraryMessenger\bin\Debug\ClassLibraryMessenger.pdb
+D:\Учебка\практика\ClassLibraryMessenger\ClassLibraryMessenger\obj\Debug\ClassLibraryMessenger.dll
+D:\Учебка\практика\ClassLibraryMessenger\ClassLibraryMessenger\obj\Debug\ClassLibraryMessenger.pdb
+D:\Учебка\практика\ClassLibraryMessenger\ClassLibraryMessenger\obj\Debug\ClassLibraryMessenger.csprojResolveAssemblyReference.cache

@@ -1,0 +1,14 @@
+Z:\практика\ConsoleServer\ConsoleServer\bin\Debug\ConsoleServer.exe.config
+Z:\практика\ConsoleServer\ConsoleServer\bin\Debug\ConsoleServer.exe
+Z:\практика\ConsoleServer\ConsoleServer\bin\Debug\ConsoleServer.pdb
+Z:\практика\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.csprojResolveAssemblyReference.cache
+Z:\практика\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.exe
+Z:\практика\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.pdb
+D:\Учебка\практика\ConsoleServer\ConsoleServer\bin\Debug\ConsoleServer.exe.config
+D:\Учебка\практика\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.exe
+D:\Учебка\практика\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.pdb
+D:\Учебка\практика\ConsoleServer\ConsoleServer\bin\Debug\ConsoleServer.exe
+D:\Учебка\практика\ConsoleServer\ConsoleServer\bin\Debug\ConsoleServer.pdb
+D:\Учебка\практика\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.csprojResolveAssemblyReference.cache
+D:\Учебка\практика\ConsoleServer\ConsoleServer\bin\Debug\ClassLibraryMessenger.dll
+D:\Учебка\практика\ConsoleServer\ConsoleServer\bin\Debug\ClassLibraryMessenger.pdb

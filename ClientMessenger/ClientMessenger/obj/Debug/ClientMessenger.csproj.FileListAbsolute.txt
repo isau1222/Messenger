@@ -1,0 +1,17 @@
+D:\Учебка\практика\ClientMessenger\ClientMessenger\bin\Debug\ClientMessenger.exe.config
+D:\Учебка\практика\ClientMessenger\ClientMessenger\bin\Debug\ClientMessenger.exe
+D:\Учебка\практика\ClientMessenger\ClientMessenger\bin\Debug\ClientMessenger.pdb
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\ClientMessenger.csprojResolveAssemblyReference.cache
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\MainWindow.baml
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\MainWindow.g.cs
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\App.g.cs
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\ClientMessenger_MarkupCompile.cache
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\ClientMessenger.g.resources
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\ClientMessenger.Properties.Resources.resources
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\ClientMessenger.csproj.GenerateResource.Cache
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\ClientMessenger.exe
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\ClientMessenger.pdb
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\Chat.baml
+D:\Учебка\практика\ClientMessenger\ClientMessenger\obj\Debug\Chat.g.cs
+D:\Учебка\практика\ClientMessenger\ClientMessenger\bin\Debug\ClassLibraryMessenger.dll
+D:\Учебка\практика\ClientMessenger\ClientMessenger\bin\Debug\ClassLibraryMessenger.pdb
