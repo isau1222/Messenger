@@ -30,6 +30,7 @@ namespace ClassLibraryMessenger
 
             public byte[] fileBytes;
             public string fileType;
+            public string fileName;
             //у меня здесь много разных конструкторов.
             public Message(string _clientName, string _text) //стандартный. вызывается приложением ClientMessenger, чтобы передать серверу, что клиент просто отправляет сообщение
             {
@@ -42,6 +43,7 @@ namespace ClassLibraryMessenger
                 image = null;
                 fileType = null;
                 fileBytes = null;
+                fileName = null;
             }
 
             public Message(string _clientName, string _text, bool _firstVisit)//вызывается приложением ClientMessenger, чтобы передать серверу, что клиент только что зашёл
@@ -56,6 +58,7 @@ namespace ClassLibraryMessenger
                 image = null;
                 fileType = null;
                 fileBytes = null;
+                fileName = null;
             }
 
             public Message(string _clientName, bool _gotOut)//вызывается приложением ClientMessenger, чтобы передать серверу, что клиент ушёл (а может и вылетел - без разницы)
@@ -69,6 +72,7 @@ namespace ClassLibraryMessenger
                 image = null;
                 fileType = null;
                 fileBytes = null;
+                fileName = null;
             }
 
             public Message(string _clientName, byte[] _image)//вызывается приложением ClientMessenger, чтобы передать серверу, что клиент отправил картинку
@@ -82,10 +86,11 @@ namespace ClassLibraryMessenger
                 image = _image;
                 fileType = null;
                 fileBytes = null;
+                fileName = null;
             }
 
 
-            public Message(string _clientName, byte[] _fileBytes, string _fileType)
+            public Message(string _clientName, byte[] _fileBytes, string _fileType, string _fileName)
             {
                 clientName = _clientName;
                 text = "";
@@ -95,6 +100,7 @@ namespace ClassLibraryMessenger
                 image = null;
                 fileType = _fileType;
                 fileBytes = _fileBytes;
+                fileName = _fileName;
             }
 
             //public static byte[] ObjectToByteArray(object obj)  //это я использовал до тех крутых двух строчек

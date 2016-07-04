@@ -34,8 +34,8 @@ namespace ClientMessenger
         const int port = 8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        const string address = "128.204.46.128";//andrew
-        //const string address = "192.168.3.8";//yula        
+        //const string address = "128.204.46.128";//andrew
+        const string address = "192.168.3.8";//yula        
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
         //const string address = "95.73.173.95";
@@ -184,44 +184,30 @@ namespace ClientMessenger
 
         private void fileAdder_Click(object sender, RoutedEventArgs e)//кнопка добавления картинки
         {
-            string filePath = "";
-            string rashirenie;
-            OpenFileDialog ofd = new OpenFileDialog();
-            Nullable<bool> result = ofd.ShowDialog();
-            if (result == true) //пользователь выбрал файл и нажал OK
-            {
-                filePath = ofd.FileName;
-                rashirenie = System.IO.Path.GetExtension(filePath);
-                if (rashirenie != ".png" && rashirenie != ".jpg" && rashirenie != ".gif")
-                {
-                    SendFile(filePath);
-                    //ShowMyError(rashirenie);
-                    return;
-                }
-            }
-            else //он нажал Отмена
-            {
-                return;
-            }
-
             try
             {
-                Image img = new Image();
-                img.Source = new BitmapImage(new Uri(filePath));  //считываем картинку, которую выбрал клиент
+                string filePath = "";
+                string rashirenie;
+                OpenFileDialog ofd = new OpenFileDialog();
+                Nullable<bool> result = ofd.ShowDialog();
+                if (result == true) //пользователь выбрал файл и нажал OK
+                {
+                    filePath = ofd.FileName;
+                    rashirenie = System.IO.Path.GetExtension(filePath);
 
-                Image ownImage = MessageControl.CreateImage(img.Source); //это контрол, который не пойдёт на сервер. этот контрол сразу увидет отправитель (и поймёт, что отправил картинку)
-                ownImage.HorizontalAlignment = HorizontalAlignment.Right; //ставим справа картинку. это же мы её отправили
-                panelPole.Children.Add(ownImage); //показываем
-
-                //дальше идёт самый потный момент
-                BitmapSource sc = (BitmapSource)img.Source;
-
-                //BitmapSource, ImageSource, BitmapImage - это всё классы чуть ли не одного типа, так что они легко друг в друга переходят
-                byte[] imageBytes = Message.ImageSourceToBytes(new PngBitmapEncoder(), sc); //получаем массив байтов нашим статическим методом. этот массив байтов и есть наша картинка (точнее её содержимое ImageSource, потому что Image - это контрол, а одно из его свойств - ImageSource)
-                Message msg = new Message(clientName, imageBytes);//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
-
-                BinaryFormatter answFormatter = new BinaryFormatter();
-                answFormatter.Serialize(stream, (object)msg); //передаём наш мессандж
+                    if (rashirenie == ".jpg" || rashirenie == ".png" || rashirenie == ".gif")
+                    {
+                        SendImage(filePath);
+                    }
+                    else if (rashirenie == ".wav" || rashirenie == ".mp3")
+                    {
+                        SendFile(filePath);
+                    }
+                    else
+                    {
+                        ShowMyError("Неправильное расширение!");
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -229,72 +215,45 @@ namespace ClientMessenger
             }
         }
 
-        void SendFile(string patch)
+        void SendImage(string filePath)
+        {
+            Image img = new Image();
+            img.Source = new BitmapImage(new Uri(filePath));  //считываем картинку, которую выбрал клиент
+
+            Image ownImage = MessageControl.CreateImage(img.Source); //это контрол, который не пойдёт на сервер. этот контрол сразу увидет отправитель (и поймёт, что отправил картинку)
+            ownImage.HorizontalAlignment = HorizontalAlignment.Right; //ставим справа картинку. это же мы её отправили
+            panelPole.Children.Add(ownImage); //показываем
+
+            //дальше идёт самый потный момент
+            BitmapSource sc = (BitmapSource)img.Source;
+
+            //BitmapSource, ImageSource, BitmapImage - это всё классы чуть ли не одного типа, так что они легко друг в друга переходят
+            byte[] imageBytes = Message.ImageSourceToBytes(new PngBitmapEncoder(), sc); //получаем массив байтов нашим статическим методом. этот массив байтов и есть наша картинка (точнее её содержимое ImageSource, потому что Image - это контрол, а одно из его свойств - ImageSource)
+            Message msg = new Message(clientName, imageBytes);//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
+
+            BinaryFormatter answFormatter = new BinaryFormatter();
+            answFormatter.Serialize(stream, (object)msg); //передаём наш мессандж
+        }
+
+        void SendFile(string filePath)
         {
             byte[] fileBytes;
-            using (FileStream readMyFile = new FileStream(patch, FileMode.Open))
+            string fileName = System.IO.Path.GetFileName(filePath);
+            using (FileStream readMyFile = new FileStream(filePath, FileMode.Open))
             {
                 fileBytes = new byte[readMyFile.Length]; //создаем массив байтов такой длины, чтобы наш файл влез полностью
-                readMyFile.Read(fileBytes, 0, fileBytes.Length); // считываем байты файла в наш массив=
+                readMyFile.Read(fileBytes, 0, fileBytes.Length); // считываем байты файла в наш массив
+                readMyFile.Close();
             }
 
-            Message msg = new Message(clientName, fileBytes, patch.Substring(patch.LastIndexOf('.')+1));//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
+            Message msg = new Message(clientName, fileBytes, System.IO.Path.GetExtension(filePath), fileName);//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
 
-            Border ownText = MessageControl.CreateUserText("Файл отправлен"); //создаём контрол (объект, содиржащийся в окне) (см. в конструкторе написано messageText)
+            Border ownText = MessageControl.CreateUserText("Файл " + fileName + " отправлен"); //создаём контрол (объект, содиржащийся в окне) (см. в конструкторе написано messageText)
             //это контрол для сообщений пользователя. он типа Border, чтобы можно было закруглять края. в него уже вложен контрол TextBox хранящий в себе вообщение messageText
             ownText.HorizontalAlignment = HorizontalAlignment.Right;//говорим нашему контролу с сообщением, что он должен выравниваться по правому краю, потому что его будет видеть сам отправитель
             panelPole.Children.Add(ownText);
             BinaryFormatter answFormatter = new BinaryFormatter();
             answFormatter.Serialize(stream, (object)msg); //передаём наш мессандж
-        }
-
-        void SendSound() //будущий метод отправки музыки
-        {
-            string filePath = "";
-            string rashirenie;
-            OpenFileDialog ofd = new OpenFileDialog();
-            Nullable<bool> result = ofd.ShowDialog();
-            if (result == true) //пользователь выбрал файл и нажал OK
-            {
-                filePath = ofd.FileName;
-                rashirenie = System.IO.Path.GetExtension(filePath);
-                //if (rashirenie != ".png" && rashirenie != ".jpg" && rashirenie != ".gif")
-                //{
-                //    ShowMyError(rashirenie);
-                //    return;
-                //}
-            }
-            else //он нажал Отмена
-            {
-                return;
-            }
-
-            try
-            {
-                byte[] bytesSound = File.ReadAllBytes(filePath);
-                //SoundPlayer sndp = new SoundPlayer(filePath);
-
-                //Image img = new Image();
-                //img.Source = new BitmapImage(new Uri(filePath));  //считываем картинку, которую выбрал клиент
-
-                //Image ownImage = MessageControl.CreateImage(img.Source); //это контрол, который не пойдёт на сервер. этот контрол сразу увидет отправитель (и поймёт, что отправил картинку)
-                //ownImage.HorizontalAlignment = HorizontalAlignment.Right; //ставим справа картинку. это же мы её отправили
-                //panelPole.Children.Add(ownImage); //показываем
-
-                ////дальше идёт самый потный момент
-                //BitmapSource sc = (BitmapSource)img.Source;
-
-                ////BitmapSource, ImageSource, BitmapImage - это всё классы чуть ли не одного типа, так что они легко друг в друга переходят
-                //byte[] imageBytes = Message.ImageSourceToBytes(new PngBitmapEncoder(), sc); //получаем массив байтов нашим статическим методом. этот массив байтов и есть наша картинка (точнее её содержимое ImageSource, потому что Image - это контрол, а одно из его свойств - ImageSource)
-                //Message msg = new Message(clientName, imageBytes);//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
-
-                //BinaryFormatter answFormatter = new BinaryFormatter();
-                //answFormatter.Serialize(stream, (object)msg); //передаём наш мессандж
-            }
-            catch (Exception ex)
-            {
-                ShowError(ex);
-            }
         }
 
         void TurnOffAll()//вырубаем всё (что-то пошло не так)
@@ -309,5 +268,5 @@ namespace ClientMessenger
     }
 }
 //руководство: как добавить контрол на панель:
- //TextBox txtBox = new TextBox();
- //    myPanel.Children.Add(txtBox);//все остальные элементы добавляются по аналогии 
+//TextBox txtBox = new TextBox();
+//myPanel.Children.Add(txtBox);//все остальные элементы добавляются по аналогии 

@@ -18,6 +18,7 @@ using System.Windows.Interop;
 using System.Windows.Documents;
 using System.Globalization;
 using System.Diagnostics;
+using System.Media;
 
 namespace ClientMessenger
 {
@@ -32,6 +33,7 @@ namespace ClientMessenger
         Chat chat;
         string clientName;
 
+        string soundName;
         //передаём нашему объекту информацию о том, кто является TcpClient клиентом, передаём стрим, передаём контрол клиетБокс (там пишется кто сейчас на сервере)
         //передаём наше главное окно (Chat), передаём имя клиента (введенное при авторизации)
         public GetterMessages(TcpClient _client, NetworkStream _stream, TextBox _clientsBox, Chat _chat, string _clientName)
@@ -70,7 +72,6 @@ namespace ClientMessenger
                         }));
                         //то есть всё внутри этих скобок уже сработает.
                         //!!!!! нельзя просто так взять и изменить свойства объекта из чужого потока !!!!!//
-
                         clientsBox.Dispatcher.Invoke(new ThreadStart(delegate
                         {
                             clientsBox.Text = "Сейчас на сервере:\n";
@@ -79,6 +80,7 @@ namespace ClientMessenger
                                 clientsBox.Text += name + "\n"; //выводим их всех
                             }
                         }));
+
                     }
                     else if (msg.gotOut)//опаньки. кто-то ушел
                     {
@@ -98,6 +100,8 @@ namespace ClientMessenger
                                 clientsBox.Text += name + "\n";
                             }
                         }));
+
+                        PlayMessSound();
                     }
                     else if (msg.image != null) //если мы получили НЕ пустой массив байтов image
                     {//то есть это условие нам гарантирует, что мы не увидим нашу картинку еще раз
@@ -108,26 +112,36 @@ namespace ClientMessenger
 
                         chat.Dispatcher.Invoke(new ThreadStart(delegate
                         {
-                            TextBox messageText = MessageControl.CreateText();
-                            messageText.Text = msg.clientName + " прислал фото:";
+                            Border messageText = MessageControl.CreateUserText(msg.clientName + " прислал фото:");
                             Image img = MessageControl.CreateImage(bitImg);//создаем контрол img, содержимым которого становится bitImg (см. MessageControl.CreateImage(), там все свойства устанавливаются)
-                            
+
                             chat.panelPole.Children.Add(messageText);//показываем уведомление "имя + прислал фото"
                             chat.panelPole.Children.Add(img);//показываем контрол Image, внутри которого принятый нами массив байтов msg.image, преобразованный в ImageSource (BitmapImage)
                         }));
+                        PlayMessSound();
                     }
                     else if (msg.fileType != null)
                     {
-                        using (FileStream fs = new FileStream("" + IDFile + '.' + msg.fileType, FileMode.Create))
-                        {
-                            fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
-                        }
                         chat.Dispatcher.Invoke(new ThreadStart(delegate
                         {
-                            Border border = MessageControl.CreateUserText(msg.clientName + ": Отправил файл");
+                            Border border = MessageControl.CreateUserText(msg.clientName + " отправил файл " + msg.fileName);
+                            Thickness padding = border.Padding;
+                            padding.Right = 25;
+                            border.Padding = padding;
+
+                            using (FileStream fs = new FileStream("Sounds\\" + msg.fileName, FileMode.Create))
+                            {
+                                fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
+                                fs.Close();
+                                if (msg.fileType == ".wav" || msg.fileType == ".mp3")
+                                {
+                                    border.MouseDown +=border_MouseDown;
+                                    soundName = "Sounds\\" + msg.fileName;
+                                }
+                            }
                             chat.panelPole.Children.Add(border);
                         }));
-
+                        PlayMessSound();
                     }
                     else //последний вариант: никто не ушел, не пришел, не отправил картинку
                     {
@@ -136,6 +150,7 @@ namespace ClientMessenger
                             Border border = MessageControl.CreateUserText(msg.clientName + ": " + msg.text);
                             chat.panelPole.Children.Add(border);
                         }));
+                        PlayMessSound();
                     }
 
                     MessageControl.ScrollToBottom(chat.scrollViewer);//листаем панель вниз (там внутри метода тоже делегат!)
@@ -144,7 +159,6 @@ namespace ClientMessenger
             catch (Exception ex)
             {
                 ChangeControlText(clientsBox, "Ошибка");
-
                 chat.Dispatcher.Invoke(new ThreadStart(delegate
                 {
                     chat.repeateButton.Visibility = Visibility.Visible;
@@ -161,13 +175,26 @@ namespace ClientMessenger
             }
         }
 
-        
+        private void border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            MediaPlayer player = new MediaPlayer();
+            player.Open(new Uri(soundName, UriKind.Relative));
+            player.Play();            
+        }
+
+
         void ChangeControlText(TextBox _textBox, string text)
         {
             _textBox.Dispatcher.Invoke(new ThreadStart(delegate
             {
                 _textBox.Text = text;
             }));
+        }
+
+        void PlayMessSound()
+        {
+            SoundPlayer mesSound = new SoundPlayer("chat_sound.wav");
+            mesSound.Play();
         }
     }
 }
