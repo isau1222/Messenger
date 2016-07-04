@@ -8,17 +8,13 @@ using System.Windows.Media;
 
 namespace ClientMessenger
 {
-    public class MyBorder : Border
+    public class MyGif : MediaElement
     {
-        public string myText;
         public bool isPressed;
-        public bool firstPress;
-        public MediaElement music;
-        public MyBorder() : base()
+
+        public MyGif() : base()
         {
-            myText = "";
             isPressed = false;
-            firstPress = true;
         }
     }
 }

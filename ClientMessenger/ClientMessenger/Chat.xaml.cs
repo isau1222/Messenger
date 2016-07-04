@@ -7,6 +7,7 @@ using System.Linq;
 using System.Media;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,8 +35,8 @@ namespace ClientMessenger
         const int port = 8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        const string address = "128.204.46.128";//andrew
-        //const string address = "192.168.3.8";//yula        
+        //const string address = "128.204.46.128";//andrew
+        const string address = "192.168.3.8";//yula        
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
         //const string address = "95.73.173.95";
@@ -46,6 +47,8 @@ namespace ClientMessenger
         public MediaElement player;
 
         public List<MyBorder> soundBorders;
+
+        bool canScrollBottom;
 
         public Chat(string _clientName) //конструктор вызывается при закрытии окна Welcome. окно велком его вызывает и передаёт имя, введеноем клиентом при авторизации
         {
@@ -64,6 +67,7 @@ namespace ClientMessenger
 
         void Connect()
         {
+            canScrollBottom = true;
             TurnOffAll(); //restart services (thread, client, stream)
 
             repeateButton.Visibility = Visibility.Collapsed; //прячем кнопку репит
@@ -87,6 +91,11 @@ namespace ClientMessenger
                 BinaryFormatter answFormatter = new BinaryFormatter();
                 answFormatter.Serialize(stream, (object)msg); //разбиваем и отправляем наш объект msg
 
+                //PromptBuilder prompt = new PromptBuilder();
+                //prompt.AppendText("Привет,");
+                //prompt.AppendText(clientName, PromptEmphasis.Strong);
+                //SpeechSynthesizer synthesizer = new SpeechSynthesizer();
+                //synthesizer.Speak(prompt);
             }
             catch (Exception ex)
             {
@@ -100,6 +109,7 @@ namespace ClientMessenger
 
         void SendMessage()
         {
+            canScrollBottom = true;
             try
             {
                 string messageText = textSend.Text; //получаем что там клиент написал
@@ -107,12 +117,11 @@ namespace ClientMessenger
                 while (messageText.IndexOf("  ") != -1) messageText = messageText.Replace("  ", " ");
                 messageText.Trim(); //форматируем строку
 
-                if (messageText == "" || messageText == " " || messageText[messageText.Length-1] == ' ') //убрать второе и третье словие(мб) //тут всё нормик
+                if (messageText == "" || messageText == " ") //убрать второе и третье словие(мб) //тут всё нормик
                 {
                     ClearLine(textSend); //очищаем линию ввода текста
                     return; //выходим из функции. клиент ничего не написал, зачем нам что-то отправлять?
                 }
-
                 //этот контрол ownText сперва отобразится в окне у отправляющего клиента. то есть мы показали клиенту, что он написал, что это еще не отправлено на сервер
                 Border ownText = MessageControl.CreateUserText(messageText); //создаём контрол (объект, содиржащийся в окне) (см. в конструкторе написано messageText)
                 //это контрол для сообщений пользователя. он типа Border, чтобы можно было закруглять края. в него уже вложен контрол TextBox хранящий в себе вообщение messageText
@@ -127,6 +136,9 @@ namespace ClientMessenger
                 answFormatter.Serialize(stream, (object)msg);
                 //там на сервере сервер отошлет это сообщение всем свои клиентам, а они в методе GetterMessages.GetMessages уже будут его получать и отображать
                 ClearLine(textSend);//отправили текс => надо очистить поле текста
+
+                scrollViewer.UpdateLayout();
+                scrollViewer.ScrollToEnd();
             }
             catch (Exception ex)
             {
@@ -146,6 +158,7 @@ namespace ClientMessenger
 
         void ShowError(Exception _ex) //фатальная ошибка
         {
+            canScrollBottom = true;
             TextBox message = MessageControl.CreateText(); //это уже контрол типа TextBox, а не Border. просто у него нет круглых краев. это сообщение, которое отобразится как сообщение от сервера 
             //(хотя здесь не идёт прием от самого сервера. ClientMessenger здесь сам сообщает, что что-то пошло не так)
             message.Text = "Ошибка: " + _ex.Message;
@@ -156,14 +169,15 @@ namespace ClientMessenger
             repeateButton.Visibility = Visibility.Visible;//показываем рипит боттон
 
             sendButton.IsEnabled = false; //отключаем возможность отправить сообщение (связи же нету)
-            MessageControl.ScrollToBottom(scrollViewer); //наша стакПанель (панель для сообщений) находится внути контрола scrollViewer
+            //MessageControl.ScrollToBottom(scrollViewer); //наша стакПанель (панель для сообщений) находится внути контрола scrollViewer
             //scrollViewer предназначен для прокрутки того, что у него внутри (а именно стакПанели)
-
+            MessageControl.ScrollToBottom(scrollViewer);
             TurnOffAll(); //ну ты понял. пиздой накроется сервер без этого (мб)
         }
 
         void ShowMyError(string errMessage) //это уже не фатальная ошибка. это просто неправильное расширение картинки
         {
+            canScrollBottom = true;
             TextBox message = MessageControl.CreateText(); //создаем текстБокс с надписью:
             message.Text = "Неправильное расширение файла!";
             //message.HorizontalAlignment = HorizontalAlignment.Center; //ставим по центру
@@ -203,6 +217,8 @@ namespace ClientMessenger
                     filePath = ofd.FileName;
                     rashirenie = System.IO.Path.GetExtension(filePath);
 
+                    canScrollBottom = true;
+
                     if (rashirenie == ".jpg" || rashirenie == ".png")
                     {
                         SendImage(filePath);
@@ -221,7 +237,7 @@ namespace ClientMessenger
                         border.MouseDown += border_MouseDown;
 
                         border.music = new MediaElement();
-                        border.music.Source = new Uri(border.myText);
+                        border.music.Source = new Uri(border.myText, UriKind.Relative);
                         border.music.UnloadedBehavior = MediaState.Manual;
 
                         soundBorders.Add(border);
@@ -232,7 +248,7 @@ namespace ClientMessenger
                     {
                         SendFile(filePath);
 
-                        MediaElement myGif = MessageControl.CreateMediaElement(new Uri(filePath));
+                        MyGif myGif = MessageControl.CreateMediaElement(new Uri(filePath));
                         myGif.HorizontalAlignment = HorizontalAlignment.Right;
                         panelPole.Children.Add(myGif);
                     }
@@ -330,6 +346,32 @@ namespace ClientMessenger
             if (client != null)
                 client.Close();
         }
+
+        private void panelPole_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (canScrollBottom)
+            {
+                MessageControl.ScrollToBottom(scrollViewer);
+            }
+            else
+            {
+                //textSend.Text = "давай иди вниз"; - временно
+                //нарисовать подсказку спуститься вниз
+            }
+        }
+
+        private void scrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+            {
+                canScrollBottom = true;
+            }
+            else
+            {
+                canScrollBottom = false;
+            }
+        }
+
     }
 }
 //руководство: как добавить контрол на панель:

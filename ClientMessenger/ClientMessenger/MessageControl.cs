@@ -82,83 +82,113 @@ namespace ClientMessenger
             return textBox;
         }
 
-        public static MediaElement CreateMediaElement(Uri uri)//создатель сообщений-картинок
+        public static MyGif CreateMediaElement(Uri uri)//создатель сообщений-картинок
         {
-            MediaElement myGif = new MediaElement();
+            MyGif myGif = new MyGif();
             myGif.MediaEnded += myGif_MediaEnded;
-            myGif.MouseDown += myGif_MouseDown;
+            //myGif.MouseDown += myGif_MouseDown;
+            myGif.MouseLeftButtonDown += myGif_MouseLeftButtonDown;
+            myGif.MouseRightButtonDown += myGif_MouseRightButtonDown;
             myGif.UnloadedBehavior = MediaState.Manual;
+            myGif.LoadedBehavior = MediaState.Manual;
             myGif.Source = uri;
-            myGif.LoadedBehavior = MediaState.Play;
 
 
             myGif.Stretch = Stretch.Uniform;
-            myGif.MaxHeight = 400;
-            myGif.MaxWidth = 400;
+            myGif.MaxHeight = 300;
+            myGif.MaxWidth = 300;
 
             myGif.Margin = SetMargin(5, myGif);
             myGif.HorizontalAlignment = HorizontalAlignment.Left; //по умолчанию картинка будем жаться к левому боку, потому что чужие сообщения слева
+            myGif.Play();
 
             return myGif;
         }
 
-        static void myGif_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        static void myGif_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if ((sender as MediaElement).IsBuffering)
+            if ((sender as MyGif).isPressed == false)
             {
-                (sender as MediaElement).Pause();
+                (sender as MyGif).isPressed = true;
+                (sender as MyGif).Pause();
             }
             else
             {
-                (sender as MediaElement).Play();
+                (sender as MyGif).isPressed = false;
+                (sender as MyGif).Play();
+            }
+        }
+
+        private static void myGif_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+
+            if ((sender as MyGif).MaxHeight != 300)
+            {
+                (sender as MyGif).MaxHeight = 300;
+                (sender as MyGif).MaxWidth = 300;
+            }
+            else
+            {
+                (sender as MyGif).MaxHeight = (sender as MyGif).NaturalVideoHeight;
+                (sender as MyGif).MaxWidth = (sender as MyGif).NaturalVideoWidth;
             }
         }
 
         static void myGif_MediaEnded(object sender, RoutedEventArgs e)
         {
-            (sender as MediaElement).Position = new TimeSpan(0, 0, 1);
-            (sender as MediaElement).Play();
+            if ((sender as MyGif).isPressed == false)
+            {
+                (sender as MediaElement).Position = new TimeSpan(0, 0, 1);
+                (sender as MediaElement).Play();
+            }
         }
 
-        public static Image CreateImage(ImageSource imSource)//создатель сообщений-картинок
+        public static MyImage CreateImage(ImageSource imSource)//создатель сообщений-картинок
         {
-            Image image = new Image();
-            image.Source = imSource;
+            MyImage myImage = new MyImage();
+            myImage.Source = imSource;
 
-            image.Stretch = Stretch.Uniform;
-            image.MaxHeight = 300;
-            image.MaxWidth = 300;
+            myImage.Stretch = Stretch.Uniform;
+            myImage.MaxHeight = 300;
+            myImage.MaxWidth = 300;
 
-            if (image.Height <= image.Width)
+            if (myImage.Height <= myImage.Width)
             {
-                image.Height -= imSource.Height;
+                myImage.Height -= imSource.Height;
             }
             else
             {
-                image.Width -= imSource.Width;
+                myImage.Width -= imSource.Width;
             }
-            
 
-            image.MouseDown += image_MouseDown;
+            if (myImage.MaxHeight < myImage.Source.Height) 
+            {
+                myImage.canResize = true;
+            }
 
-            image.Margin = SetMargin(5, image);
-            image.HorizontalAlignment = HorizontalAlignment.Left; //по умолчанию картинка будем жаться к левому боку, потому что чужие сообщения слева
+            myImage.MouseDown += image_MouseDown;
+
+            myImage.Margin = SetMargin(5, myImage);
+            myImage.HorizontalAlignment = HorizontalAlignment.Left; //по умолчанию картинка будем жаться к левому боку, потому что чужие сообщения слева
             //но вот когда мы хотим отправить такую штуку, мы помимо этого статического метода CreateImage(source) пишем в создавшийся Image: 
             //image.HorizontalAlignment = HorizontalAlignment.Right; потому что мы отправитель и должны видеть наше детище справа
-            return image;
+            return myImage;
         }
 
         static void image_MouseDown(object sender, RoutedEventArgs e)
         {
-            if ((sender as Image).MaxHeight != 300)
+            if ((sender as MyImage).canResize)
             {
-                (sender as Image).MaxHeight = 300;
-                (sender as Image).MaxWidth = 300;
-            }
-            else
-            {
-                (sender as Image).MaxHeight = (sender as Image).Source.Height;
-                (sender as Image).MaxWidth = (sender as Image).Source.Width;
+                if ((sender as MyImage).MaxHeight != 300)
+                {
+                    (sender as MyImage).MaxHeight = 300;
+                    (sender as MyImage).MaxWidth = 300;
+                }
+                else
+                {
+                    (sender as MyImage).MaxHeight = (sender as MyImage).Source.Height;
+                    (sender as MyImage).MaxWidth = (sender as MyImage).Source.Width;
+                }
             }
         }
 

@@ -22,8 +22,8 @@
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
         
-        <ScrollViewer Name="scrollViewer" VerticalScrollBarVisibility="Hidden" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Foreground="{x:Null}" >
-            <StackPanel Name="panelPole"  VerticalAlignment="Bottom" Margin="15,15,7.5,7.5">
+        <ScrollViewer Name="scrollViewer" VerticalScrollBarVisibility="Hidden" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Foreground="{x:Null}" ScrollChanged="scrollViewer_ScrollChanged">
+            <StackPanel Name="panelPole"  VerticalAlignment="Bottom" Margin="15,15,7.5,7.5" SizeChanged="panelPole_SizeChanged">
             </StackPanel>
         </ScrollViewer>
         <Border Padding="8" CornerRadius="12" SnapsToDevicePixels="True" Grid.Row="2" Grid.Column="1" MinHeight="60" MaxHeight="200" Margin="7.5,7.5,7.5,15" Background="White">

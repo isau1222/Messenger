@@ -41,6 +41,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -82,6 +83,8 @@
   <ItemGroup>
     <Compile Include="MessageControl.cs" />
     <Compile Include="MyBorder.cs" />
+    <Compile Include="MyGif.cs" />
+    <Compile Include="MyImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

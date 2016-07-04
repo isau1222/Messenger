@@ -142,7 +142,7 @@ namespace ClientMessenger
                                     fs.Close();
                                     border.music = new MediaElement();
                                     border.music.UnloadedBehavior = MediaState.Manual;
-                                    border.music.Source = new Uri(border.myText);
+                                    border.music.Source = new Uri(border.myText, UriKind.Relative);
 
                                     border.MouseDown += chat.border_MouseDown;
                                     chat.soundBorders.Add(border);
@@ -158,13 +158,14 @@ namespace ClientMessenger
                                     fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
                                     //fs.Close();
 
-                                    MediaElement myGif = MessageControl.CreateMediaElement(new Uri(Directory.GetCurrentDirectory() + "\\" + directoryName + "\\" + msg.fileName));
+                                    //MediaElement myGif = MessageControl.CreateMediaElement(new Uri(Directory.GetCurrentDirectory() + "\\" + directoryName + "\\" + msg.fileName));
+                                    MyGif myGif = MessageControl.CreateMediaElement(new Uri(directoryName + "\\" + msg.fileName, UriKind.Relative));
 
                                     Border messageText = MessageControl.CreateUserText(msg.clientName + " прислал gif:");
                                     chat.panelPole.Children.Add(messageText);//показываем уведомление "имя + прислал фото"
                                     chat.panelPole.Children.Add(myGif);//показываем контрол Image, внутри которого принятый нами массив байтов msg.image, преобразованный в ImageSource (BitmapImage)
                                 }
-                            }
+                            }                            
                         }));
                         PlayMessSound();
                     }
@@ -177,8 +178,6 @@ namespace ClientMessenger
                         }));
                         PlayMessSound();
                     }
-
-                    MessageControl.ScrollToBottom(chat.scrollViewer);//листаем панель вниз (там внутри метода тоже делегат!)
                 }
             }
             catch (Exception ex)

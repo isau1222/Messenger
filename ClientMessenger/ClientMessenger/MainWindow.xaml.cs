@@ -29,7 +29,6 @@ namespace ClientMessenger
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Start();
-
         }
 
         private void textName_KeyDown(object sender, KeyEventArgs e)
