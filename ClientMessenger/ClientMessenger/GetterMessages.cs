@@ -142,11 +142,16 @@ namespace ClientMessenger
                                     fs.Close();
                                     if (msg.fileType == ".wav" || msg.fileType == ".mp3")
                                     {
-                                        border.MouseDown += MessageControl.border_MouseDown;
+                                        border.music = new MediaPlayer();
+                                        border.music.Open(new Uri(border.myText, UriKind.Relative));
+
+                                        border.MouseDown += chat.border_MouseDown;
+                                        chat.player = border.music;
+                                        chat.soundBorders.Add(border);
                                     }
                                 }
                                 chat.panelPole.Children.Add(border);
-                            }        
+                            }
                             else if (msg.fileType == ".gif")
                             {
                                 string directoryName = "Gifes";
@@ -162,7 +167,7 @@ namespace ClientMessenger
                                     chat.panelPole.Children.Add(messageText);//показываем уведомление "имя + прислал фото"
                                     chat.panelPole.Children.Add(myGif);//показываем контрол Image, внутри которого принятый нами массив байтов msg.image, преобразованный в ImageSource (BitmapImage)
                                 }
-                            }                    
+                            }
                         }));
                         PlayMessSound();
                     }
@@ -238,6 +243,14 @@ namespace ClientMessenger
                 else msg.fileName = name + "(" + index++ + ")" + type;
             }
         }
+
+        //void border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        //{
+        //    chat.Dispatcher.Invoke(new ThreadStart(delegate
+        //    {
+        //        chat.PlayMusic(new Uri((sender as MyBorder).myText, UriKind.Relative));
+        //    }));
+        //}
     }
 }
 

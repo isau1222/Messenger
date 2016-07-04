@@ -34,14 +34,18 @@ namespace ClientMessenger
         const int port = 8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        //const string address = "128.204.46.128";//andrew
-        const string address = "192.168.3.8";//yula        
+        const string address = "128.204.46.128";//andrew
+        //const string address = "192.168.3.8";//yula        
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
         //const string address = "95.73.173.95";
         
 
         public string clientName; //имя клиента
+
+        public MediaPlayer player;
+
+        public List<MyBorder> soundBorders;
 
         public Chat(string _clientName) //конструктор вызывается при закрытии окна Welcome. окно велком его вызывает и передаёт имя, введеноем клиентом при авторизации
         {
@@ -50,7 +54,10 @@ namespace ClientMessenger
             clientsBox.IsReadOnly = true; //не даём клиенту вручную менять содержимое списка имен клиетов
 
             clientName = _clientName;
-            
+
+            player = new MediaPlayer();
+            soundBorders = new List<MyBorder>();
+
             Connect(); //коннектимся
         }
 
@@ -210,7 +217,12 @@ namespace ClientMessenger
                         padding.Left = 25;
                         border.Padding = padding;
 
-                        border.MouseDown += MessageControl.border_MouseDown;
+                        border.MouseDown += border_MouseDown;
+
+                        border.music = new MediaPlayer();
+                        border.music.Open(new Uri(border.myText, UriKind.Relative));
+
+                        soundBorders.Add(border);
 
                         panelPole.Children.Add(border);
                     }
@@ -232,6 +244,45 @@ namespace ClientMessenger
             {
                 ShowError(ex);
             }
+        }
+
+        public void border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            foreach (MyBorder soundBorder in soundBorders)
+            {
+                if (soundBorder != (sender as MyBorder))
+                {
+                    soundBorder.isPressed = false;
+                }
+            }
+            player.Pause();
+            player = (sender as MyBorder).music;
+            if ((sender as MyBorder).firstPress == true)
+            {
+                (sender as MyBorder).firstPress = false;
+                (sender as MyBorder).isPressed = true;
+                player.Play();
+            }
+            else
+            {
+                if ((sender as MyBorder).isPressed == false)
+                {
+                    (sender as MyBorder).isPressed = true;
+                    //PlayMusic(new Uri((sender as MyBorder).myText, UriKind.Relative));
+                    player.Play();
+                }
+                else
+                {
+                    (sender as MyBorder).isPressed = false;
+                    player.Pause();
+                }
+            }
+        }
+
+        void PlayMusic(Uri uri)
+        {
+            player.Open(uri);
+            player.Play();
         }
 
         void SendImage(string filePath)

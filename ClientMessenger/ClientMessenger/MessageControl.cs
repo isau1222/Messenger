@@ -234,12 +234,5 @@ namespace ClientMessenger
 
             return cornerRadius;
         }
-
-        public static void border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            MediaPlayer player = new MediaPlayer();
-            player.Open(new Uri((sender as MyBorder).myText, UriKind.Relative));
-            player.Play();
-        } 
     }
 }
