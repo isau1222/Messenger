@@ -34,8 +34,8 @@ namespace ClientMessenger
         const int port = 8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        const string address = "128.204.46.128";//andrew
-        //const string address = "192.168.3.8";//yula        
+        //const string address = "128.204.46.128";//andrew
+        const string address = "192.168.3.8";//yula        
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
         //const string address = "95.73.173.95";
@@ -195,13 +195,32 @@ namespace ClientMessenger
                     filePath = ofd.FileName;
                     rashirenie = System.IO.Path.GetExtension(filePath);
 
-                    if (rashirenie == ".jpg" || rashirenie == ".png" || rashirenie == ".gif")
+                    if (rashirenie == ".jpg" || rashirenie == ".png")
                     {
                         SendImage(filePath);
                     }
                     else if (rashirenie == ".wav" || rashirenie == ".mp3")
                     {
                         SendFile(filePath);
+
+                        MyBorder border = MessageControl.CreateUserText(System.IO.Path.GetFileName(filePath));
+                        border.myText = filePath;
+                        border.HorizontalAlignment = HorizontalAlignment.Right;
+                        Thickness padding = border.Padding;
+                        padding.Left = 25;
+                        border.Padding = padding;
+
+                        border.MouseDown += MessageControl.border_MouseDown;
+
+                        panelPole.Children.Add(border);
+                    }
+                    else if (rashirenie == ".gif")
+                    {
+                        SendFile(filePath);
+
+                        MediaElement myGif = MessageControl.CreateMediaElement(new Uri(filePath));
+                        myGif.HorizontalAlignment = HorizontalAlignment.Right;
+                        panelPole.Children.Add(myGif);
                     }
                     else
                     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -11,7 +12,7 @@ using System.Windows.Media;
 namespace ClientMessenger
 {
     //тут создаются разных типов контроллы. просто для удобства, чтобы тысячу раз все свойства не переназначать
-    public class MessageControl : Button
+    public class MessageControl
     {
         public static MyBorder CreateUserText(string _text)//клиентовский текст
         {
@@ -41,6 +42,23 @@ namespace ClientMessenger
             return border;
         }
 
+        //public static MyBorder CreateMusicBorder(string _text, string _directoryName, string _fileName)
+        //{
+        //    MyBorder border = CreateUserText(_text);
+        //    Thickness padding = border.Padding;
+        //    padding.Left = 25;
+        //    border.Padding = padding;
+
+        //    using (FileStream fs = new FileStream(_directoryName + "\\" + _fileName, FileMode.Create))
+        //    {
+        //        fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
+        //        fs.Close();
+                
+        //    }
+
+        //    return border;
+        //}
+
         public static TextBox CreateText()//текст для уведомлений
         {
             TextBox textBox = new TextBox();
@@ -62,6 +80,44 @@ namespace ClientMessenger
             textBox.MaxWidth = 750; //максимальная ширина
 
             return textBox;
+        }
+
+        public static MediaElement CreateMediaElement(Uri uri)//создатель сообщений-картинок
+        {
+            MediaElement myGif = new MediaElement();
+            myGif.MediaEnded += myGif_MediaEnded;
+            myGif.MouseDown += myGif_MouseDown;
+            myGif.UnloadedBehavior = MediaState.Manual;
+            myGif.Source = uri;
+            myGif.LoadedBehavior = MediaState.Play;
+
+
+            myGif.Stretch = Stretch.Uniform;
+            myGif.MaxHeight = 400;
+            myGif.MaxWidth = 400;
+
+            myGif.Margin = SetMargin(5, myGif);
+            myGif.HorizontalAlignment = HorizontalAlignment.Left; //по умолчанию картинка будем жаться к левому боку, потому что чужие сообщения слева
+
+            return myGif;
+        }
+
+        static void myGif_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if ((sender as MediaElement).IsBuffering)
+            {
+                (sender as MediaElement).Pause();
+            }
+            else
+            {
+                (sender as MediaElement).Play();
+            }
+        }
+
+        static void myGif_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            (sender as MediaElement).Position = new TimeSpan(0, 0, 1);
+            (sender as MediaElement).Play();
         }
 
         public static Image CreateImage(ImageSource imSource)//создатель сообщений-картинок
@@ -129,6 +185,15 @@ namespace ClientMessenger
             return margin;
         }
 
+        public static Thickness SetMargin(double objMarg,  MediaElement control)
+        {
+            Thickness margin = control.Margin;
+            margin.Top = objMarg;
+            margin.Bottom = objMarg;
+
+            return margin;
+        }
+
         public static void ScrollToBottom(ScrollViewer scrollViewer)
         {
             scrollViewer.Dispatcher.Invoke(new ThreadStart(delegate
@@ -169,5 +234,12 @@ namespace ClientMessenger
 
             return cornerRadius;
         }
+
+        public static void border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            MediaPlayer player = new MediaPlayer();
+            player.Open(new Uri((sender as MyBorder).myText, UriKind.Relative));
+            player.Play();
+        } 
     }
 }

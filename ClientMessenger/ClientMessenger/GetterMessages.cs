@@ -33,7 +33,6 @@ namespace ClientMessenger
         Chat chat;
         string clientName;
 
-        string soundName;
         //передаём нашему объекту информацию о том, кто является TcpClient клиентом, передаём стрим, передаём контрол клиетБокс (там пишется кто сейчас на сервере)
         //передаём наше главное окно (Chat), передаём имя клиента (введенное при авторизации)
         public GetterMessages(TcpClient _client, NetworkStream _stream, TextBox _clientsBox, Chat _chat, string _clientName)
@@ -124,41 +123,46 @@ namespace ClientMessenger
                     {
                         chat.Dispatcher.Invoke(new ThreadStart(delegate
                         {
-                            int index=0;
-                            string name = msg.fileName.Substring(0, msg.fileName.LastIndexOf('.'));
-                            string type = msg.fileType;
-                            while (File.Exists("Sounds\\" + msg.fileName))
+                            if (msg.fileType == ".wav" || msg.fileType == ".mp3")
                             {
-                                int k;
-                                int p = msg.fileName.LastIndexOf('(');
-                                int p2 = msg.fileName.LastIndexOf(')');
-                                if (p != -1 && p2!=-1&&Int32.TryParse(msg.fileName.Substring(p+1, p2-p-1), out k)) 
+                                string directoryName = "Sounds";
+                                CheckName(msg, directoryName);
+
+                                MyBorder border = MessageControl.CreateUserText(msg.clientName + " отправил файл " + msg.fileName);
+
+                                border.myText = directoryName + "\\" + msg.fileName;
+
+                                Thickness padding = border.Padding;
+                                padding.Right = 25;
+                                border.Padding = padding;
+
+                                using (FileStream fs = new FileStream(directoryName + "\\" + msg.fileName, FileMode.Create))
                                 {
-                                    msg.fileName = msg.fileName.Substring(0, p) + "(" + ++k + ")" + type;
-                                    index = k;
+                                    fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
+                                    fs.Close();
+                                    if (msg.fileType == ".wav" || msg.fileType == ".mp3")
+                                    {
+                                        border.MouseDown += MessageControl.border_MouseDown;
+                                    }
                                 }
-                                else msg.fileName = name + "(" + index++ + ")" + type;
-                            }
-
-                            MyBorder border = MessageControl.CreateUserText(msg.clientName + " отправил файл " + msg.fileName);
-
-                            border.myText = "Sounds\\"+msg.fileName;
-
-                            Thickness padding = border.Padding;
-                            padding.Right = 25;
-                            border.Padding = padding;
-
-                            using (FileStream fs = new FileStream("Sounds\\" + msg.fileName, FileMode.Create))
+                                chat.panelPole.Children.Add(border);
+                            }        
+                            else if (msg.fileType == ".gif")
                             {
-                                fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
-                                fs.Close();
-                                if (msg.fileType == ".wav" || msg.fileType == ".mp3")
+                                string directoryName = "Gifes";
+                                CheckName(msg, directoryName);
+                                using (FileStream fs = new FileStream(directoryName + "\\" + msg.fileName, FileMode.Create))
                                 {
-                                    border.MouseDown +=border_MouseDown;
-                                    soundName = "Sounds\\" + msg.fileName;
+                                    fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
+                                    fs.Close();
+
+                                    MediaElement myGif = MessageControl.CreateMediaElement(new Uri(Directory.GetCurrentDirectory() + "\\" + directoryName + "\\" + msg.fileName));
+
+                                    Border messageText = MessageControl.CreateUserText(msg.clientName + " прислал gif:");
+                                    chat.panelPole.Children.Add(messageText);//показываем уведомление "имя + прислал фото"
+                                    chat.panelPole.Children.Add(myGif);//показываем контрол Image, внутри которого принятый нами массив байтов msg.image, преобразованный в ImageSource (BitmapImage)
                                 }
-                            }
-                            chat.panelPole.Children.Add(border);
+                            }                    
                         }));
                         PlayMessSound();
                     }
@@ -194,12 +198,12 @@ namespace ClientMessenger
             }
         }
 
-        private void border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            MediaPlayer player = new MediaPlayer();
-            player.Open(new Uri((sender as MyBorder).myText, UriKind.Relative));
-            player.Play();            
-        }
+        //private void border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        //{
+        //    MediaPlayer player = new MediaPlayer();
+        //    player.Open(new Uri((sender as MyBorder).myText, UriKind.Relative));
+        //    player.Play();            
+        //}
 
 
         void ChangeControlText(TextBox _textBox, string text)
@@ -214,6 +218,25 @@ namespace ClientMessenger
         {
             SoundPlayer mesSound = new SoundPlayer("chat_sound.wav");
             mesSound.Play();
+        }
+
+        void CheckName(Message msg, string directoryName)
+        {
+            int index = 0;
+            string name = msg.fileName.Substring(0, msg.fileName.LastIndexOf('.'));
+            string type = msg.fileType;
+            while (File.Exists(directoryName + "\\" + msg.fileName))
+            {
+                int k;
+                int p = msg.fileName.LastIndexOf('(');
+                int p2 = msg.fileName.LastIndexOf(')');
+                if (p != -1 && p2 != -1 && Int32.TryParse(msg.fileName.Substring(p + 1, p2 - p - 1), out k))
+                {
+                    msg.fileName = msg.fileName.Substring(0, p) + "(" + ++k + ")" + type;
+                    index = k;
+                }
+                else msg.fileName = name + "(" + index++ + ")" + type;
+            }
         }
     }
 }
