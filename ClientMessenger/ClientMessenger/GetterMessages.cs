@@ -98,7 +98,7 @@ namespace ClientMessenger
                             }
                         }));
                     }
-                    else if (msg.image != null) //если мы получили НЕ пустой массив байтов image И имя отправителя не равно нашему собственному (зачем по сети отправлять себе же картинку? поэтому мы её сразу отображаем у себя при отправлении)
+                    else if (msg.image != null) //если мы получили НЕ пустой массив байтов image
                     {//то есть это условие нам гарантирует, что мы не увидим нашу картинку еще раз
                         BitmapImage bitImg = Message.BytesToImageSource(msg.image); //конвертируем массив байтов в BitmapImage (напомню, что BitmapImage, ImageSource, BitmapSource супер схожие вещи)
                         //то есть мы получаем ImageSource, а не контрол Image, потому что ImageSource - это картинка, находящаяся внитри Image. именно она то нам и нужна

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 //библиотека. сделано так, чтобы 2 разных проекта имели её у себя под крылом и обращались к ней.
@@ -24,8 +25,7 @@ namespace ClassLibraryMessenger
             public bool firstVisit; //зашел ли он впервые
             public bool gotOut; //ушёл ли он
             public string[] clients; //список имен клиентов
-            public byte[] image; //картиночка. тут используется массив byte[], а не объект класса Image, потому что объект класса Image НЕЛЬЗЯ сериализовать! (одна из тонкостей, к которым нужно идти несколько часов)
-
+            public byte[] image; //картиночка. тут используется массив byte[], а не объект класса Image, потому что объект класса Image НЕЛЬЗЯ сериализовать (и ImageSource тоже)! (одна из тонкостей, к которым нужно идти несколько часов)
         //у меня здесь много разных конструкторов.
             public Message(string _clientName, string _text) //стандартный. вызывается приложением ClientMessenger, чтобы передать серверу, что клиент просто отправляет сообщение
             {
@@ -35,7 +35,7 @@ namespace ClassLibraryMessenger
                 firstVisit = false;
                 gotOut = false;
                 clients = new string[0];
-                image = null; 
+                image = null;
             }
 
             public Message(string _clientName, string _text, bool _firstVisit)//вызывается приложением ClientMessenger, чтобы передать серверу, что клиент только что зашёл

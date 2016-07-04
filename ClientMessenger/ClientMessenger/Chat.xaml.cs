@@ -48,7 +48,7 @@ namespace ClientMessenger
             clientsBox.IsReadOnly = true; //не даём клиенту вручную менять содержимое списка имен клиетов
 
             clientName = _clientName;
-
+            
             Connect(); //коннектимся
         }
 
@@ -97,7 +97,7 @@ namespace ClientMessenger
                 while (messageText.IndexOf("  ") != -1) messageText = messageText.Replace("  ", " ");
                 messageText.Trim(); //форматируем строку
 
-                if (messageText == "" || messageText == " " || messageText[messageText.Length-1] == ' ') //убрать второе и третье словие(мб)
+                if (messageText == "" || messageText == " " || messageText[messageText.Length-1] == ' ') //убрать второе и третье словие(мб) //тут всё нормик
                 {
                     ClearLine(textSend); //очищаем линию ввода текста
                     return; //выходим из функции. клиент ничего не написал, зачем нам что-то отправлять?
@@ -116,7 +116,6 @@ namespace ClientMessenger
                 BinaryFormatter answFormatter = new BinaryFormatter();
                 answFormatter.Serialize(stream, (object)msg);
                 //там на сервере сервер отошлет это сообщение всем свои клиентам, а они в методе GetterMessages.GetMessages уже будут его получать и отображать
-
                 ClearLine(textSend);//отправили текс => надо очистить поле текста
             }
             catch (Exception ex)

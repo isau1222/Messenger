@@ -27,7 +27,7 @@
             </StackPanel>
         </ScrollViewer>
         <Border Padding="8" CornerRadius="12" SnapsToDevicePixels="True" Grid.Row="2" Grid.Column="1" MinHeight="60" MaxHeight="200" Margin="7.5,7.5,7.5,15" Background="White">
-            <TextBox Name="textSend" TextWrapping="Wrap" BorderThickness="0" PreviewKeyDown="textSend_PreviewKeyDown" SpellCheck.IsEnabled="True"  TextChanged="textSend_TextChanged" FontSize="15"/>
+            <TextBox Name="textSend" TextWrapping="Wrap"  BorderThickness="0" PreviewKeyDown="textSend_PreviewKeyDown" SpellCheck.IsEnabled="True"  TextChanged="textSend_TextChanged" FontSize="15" />
         </Border>
         <Border CornerRadius="12" SnapsToDevicePixels="True" BorderThickness="0" Background="White" Grid.Row="2" Grid.Column="2" Margin="7.5,7.5,15,15" MouseDown="Button_Click_1" >
             <Label Content="Send" Name="sendButton" HorizontalContentAlignment="Center"  Background="Transparent" Foreground="#FF0097FF" BorderBrush="#00000000" Height="50" Width="150" FontSize="25" BorderThickness="0"/>
