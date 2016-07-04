@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="MessageControl.cs" />
     <Compile Include="MessageObject.cs" />
+    <Compile Include="MyBorder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

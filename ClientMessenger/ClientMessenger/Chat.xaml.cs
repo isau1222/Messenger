@@ -34,8 +34,8 @@ namespace ClientMessenger
         const int port = 8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        //const string address = "128.204.46.128";//andrew
-        const string address = "192.168.3.8";//yula        
+        const string address = "128.204.46.128";//andrew
+        //const string address = "192.168.3.8";//yula        
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
         //const string address = "95.73.173.95";

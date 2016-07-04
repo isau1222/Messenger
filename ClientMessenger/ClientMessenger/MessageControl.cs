@@ -13,9 +13,9 @@ namespace ClientMessenger
     //тут создаются разных типов контроллы. просто для удобства, чтобы тысячу раз все свойства не переназначать
     public class MessageControl : Button
     {
-        public static Border CreateUserText(string _text)//клиентовский текст
+        public static MyBorder CreateUserText(string _text)//клиентовский текст
         {
-            Border border = new Border();
+            MyBorder border = new MyBorder();
             border.Background = Brushes.White;
             border.SnapsToDevicePixels = true;
             border.HorizontalAlignment = HorizontalAlignment.Left;

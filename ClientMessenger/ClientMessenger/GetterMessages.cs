@@ -124,7 +124,26 @@ namespace ClientMessenger
                     {
                         chat.Dispatcher.Invoke(new ThreadStart(delegate
                         {
-                            Border border = MessageControl.CreateUserText(msg.clientName + " отправил файл " + msg.fileName);
+                            int index=0;
+                            string name = msg.fileName.Substring(0, msg.fileName.LastIndexOf('.'));
+                            string type = msg.fileType;
+                            while (File.Exists("Sounds\\" + msg.fileName))
+                            {
+                                int k;
+                                int p = msg.fileName.LastIndexOf('(');
+                                int p2 = msg.fileName.LastIndexOf(')');
+                                if (p != -1 && p2!=-1&&Int32.TryParse(msg.fileName.Substring(p+1, p2-p-1), out k)) 
+                                {
+                                    msg.fileName = msg.fileName.Substring(0, p) + "(" + ++k + ")" + type;
+                                    index = k;
+                                }
+                                else msg.fileName = name + "(" + index++ + ")" + type;
+                            }
+
+                            MyBorder border = MessageControl.CreateUserText(msg.clientName + " отправил файл " + msg.fileName);
+
+                            border.myText = "Sounds\\"+msg.fileName;
+
                             Thickness padding = border.Padding;
                             padding.Right = 25;
                             border.Padding = padding;
@@ -178,7 +197,7 @@ namespace ClientMessenger
         private void border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             MediaPlayer player = new MediaPlayer();
-            player.Open(new Uri(soundName, UriKind.Relative));
+            player.Open(new Uri((sender as MyBorder).myText, UriKind.Relative));
             player.Play();            
         }
 
