@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -33,7 +34,8 @@ namespace ClientMessenger
         const int port = 8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        const string address = "128.204.46.128";//yula
+        //const string address = "128.204.46.128";//andrew
+        const string address = "192.168.3.8";//yula        
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
         //const string address = "95.73.173.95";
@@ -209,9 +211,9 @@ namespace ClientMessenger
                 Image ownImage = MessageControl.CreateImage(img.Source); //это контрол, который не пойдёт на сервер. этот контрол сразу увидет отправитель (и поймёт, что отправил картинку)
                 ownImage.HorizontalAlignment = HorizontalAlignment.Right; //ставим справа картинку. это же мы её отправили
                 panelPole.Children.Add(ownImage); //показываем
-                
+
                 //дальше идёт самый потный момент
-                BitmapSource sc = (BitmapSource)img.Source;               
+                BitmapSource sc = (BitmapSource)img.Source;
 
                 //BitmapSource, ImageSource, BitmapImage - это всё классы чуть ли не одного типа, так что они легко друг в друга переходят
                 byte[] imageBytes = Message.ImageSourceToBytes(new PngBitmapEncoder(), sc); //получаем массив байтов нашим статическим методом. этот массив байтов и есть наша картинка (точнее её содержимое ImageSource, потому что Image - это контрол, а одно из его свойств - ImageSource)
@@ -219,6 +221,55 @@ namespace ClientMessenger
 
                 BinaryFormatter answFormatter = new BinaryFormatter();
                 answFormatter.Serialize(stream, (object)msg); //передаём наш мессандж
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+        }
+
+        void SendSound() //будущий метод отправки музыки
+        {
+            string filePath = "";
+            string rashirenie;
+            OpenFileDialog ofd = new OpenFileDialog();
+            Nullable<bool> result = ofd.ShowDialog();
+            if (result == true) //пользователь выбрал файл и нажал OK
+            {
+                filePath = ofd.FileName;
+                rashirenie = System.IO.Path.GetExtension(filePath);
+                //if (rashirenie != ".png" && rashirenie != ".jpg" && rashirenie != ".gif")
+                //{
+                //    ShowMyError(rashirenie);
+                //    return;
+                //}
+            }
+            else //он нажал Отмена
+            {
+                return;
+            }
+
+            try
+            {
+                byte[] bytesSound = File.ReadAllBytes(filePath);
+                //SoundPlayer sndp = new SoundPlayer(filePath);
+
+                //Image img = new Image();
+                //img.Source = new BitmapImage(new Uri(filePath));  //считываем картинку, которую выбрал клиент
+
+                //Image ownImage = MessageControl.CreateImage(img.Source); //это контрол, который не пойдёт на сервер. этот контрол сразу увидет отправитель (и поймёт, что отправил картинку)
+                //ownImage.HorizontalAlignment = HorizontalAlignment.Right; //ставим справа картинку. это же мы её отправили
+                //panelPole.Children.Add(ownImage); //показываем
+
+                ////дальше идёт самый потный момент
+                //BitmapSource sc = (BitmapSource)img.Source;
+
+                ////BitmapSource, ImageSource, BitmapImage - это всё классы чуть ли не одного типа, так что они легко друг в друга переходят
+                //byte[] imageBytes = Message.ImageSourceToBytes(new PngBitmapEncoder(), sc); //получаем массив байтов нашим статическим методом. этот массив байтов и есть наша картинка (точнее её содержимое ImageSource, потому что Image - это контрол, а одно из его свойств - ImageSource)
+                //Message msg = new Message(clientName, imageBytes);//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
+
+                //BinaryFormatter answFormatter = new BinaryFormatter();
+                //answFormatter.Serialize(stream, (object)msg); //передаём наш мессандж
             }
             catch (Exception ex)
             {
