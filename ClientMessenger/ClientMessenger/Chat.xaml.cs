@@ -33,7 +33,7 @@ namespace ClientMessenger
         const int port = 8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        const string address = "192.168.3.8";//yula
+        const string address = "128.204.46.128";//yula
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
         //const string address = "95.73.173.95";
@@ -97,7 +97,7 @@ namespace ClientMessenger
                 while (messageText.IndexOf("  ") != -1) messageText = messageText.Replace("  ", " ");
                 messageText.Trim(); //форматируем строку
 
-                if (messageText == "" || messageText == " " || messageText[messageText.Length-1] == ' ')
+                if (messageText == "" || messageText == " " || messageText[messageText.Length-1] == ' ') //убрать второе и третье словие(мб)
                 {
                     ClearLine(textSend); //очищаем линию ввода текста
                     return; //выходим из функции. клиент ничего не написал, зачем нам что-то отправлять?

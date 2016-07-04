@@ -52,12 +52,15 @@ namespace ConsoleServer
                         {
                             Console.WriteLine(msg.clientName + ": " + msg.text);
                         }
+
+                        for (int i = 0; i < clientObjects.Count; i++)
+                        {
+                            if (clientObjects[i]!=this)
+                                clientObjects[i].SendMessage(clientObjects[i].stream, msg); //говорим всем нашим clientObjects, чтобы они оповестили своих клиентов о том, что клиент что-то написал
+                        }
                     }
 
-                    for (int i = 0; i < clientObjects.Count; i++)
-                    {
-                        clientObjects[i].SendMessage(clientObjects[i].stream, msg); //говорим всем нашим clientObjects, чтобы они оповестили своих клиентов о том, что клиент что-то написал
-                    }
+                    
                 }
             }
             catch (Exception ex)
@@ -98,6 +101,11 @@ namespace ConsoleServer
                 clients[i] = clientObjects[i].clientName;
             }
             msg.clients = clients; //передаём клиенту (этот msg уйдёт обратно клиенту, проверь еще раз код, если не заметил) имена всех клиентов, находящихся на сервере
+
+            for (int i = 0; i < clientObjects.Count; i++)
+            {
+                clientObjects[i].SendMessage(clientObjects[i].stream, msg); //отправляем всем клиентам, что этот ушел
+            }
         }
 
         void HeLeftUs()

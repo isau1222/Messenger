@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using MySql.Data.MySqlClient;
 
 namespace ConsoleServer
 {
@@ -11,7 +10,7 @@ namespace ConsoleServer
     class Program
     {
         //const string ip = "192.168.1.19";//doma
-        const string ip = "192.168.3.8";//yula
+        const string ip = "128.204.46.128";//yula
         //const string ip = "192.168.70.1";
         const int port = 8080;
         static TcpListener listener;

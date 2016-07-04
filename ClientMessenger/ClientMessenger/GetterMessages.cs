@@ -98,7 +98,7 @@ namespace ClientMessenger
                             }
                         }));
                     }
-                    else if (msg.image != null && msg.clientName != clientName) //если мы получили НЕ пустой массив байтов image И имя отправителя не равно нашему собственному (зачем по сети отправлять себе же картинку? поэтому мы её сразу отображаем у себя при отправлении)
+                    else if (msg.image != null) //если мы получили НЕ пустой массив байтов image И имя отправителя не равно нашему собственному (зачем по сети отправлять себе же картинку? поэтому мы её сразу отображаем у себя при отправлении)
                     {//то есть это условие нам гарантирует, что мы не увидим нашу картинку еще раз
                         BitmapImage bitImg = Message.BytesToImageSource(msg.image); //конвертируем массив байтов в BitmapImage (напомню, что BitmapImage, ImageSource, BitmapSource супер схожие вещи)
                         //то есть мы получаем ImageSource, а не контрол Image, потому что ImageSource - это картинка, находящаяся внитри Image. именно она то нам и нужна
@@ -110,11 +110,12 @@ namespace ClientMessenger
                             TextBox messageText = MessageControl.CreateText();
                             messageText.Text = msg.clientName + " прислал фото:";
                             Image img = MessageControl.CreateImage(bitImg);//создаем контрол img, содержимым которого становится bitImg (см. MessageControl.CreateImage(), там все свойства устанавливаются)
+                            
                             chat.panelPole.Children.Add(messageText);//показываем уведомление "имя + прислал фото"
                             chat.panelPole.Children.Add(img);//показываем контрол Image, внутри которого принятый нами массив байтов msg.image, преобразованный в ImageSource (BitmapImage)
                         }));
                     }
-                    else if (msg.clientName != clientName) //последний вариант: никто не ушел, не пришел, не отправил картинку
+                    else //последний вариант: никто не ушел, не пришел, не отправил картинку
                     {
                         chat.Dispatcher.Invoke(new ThreadStart(delegate
                         {
@@ -146,6 +147,7 @@ namespace ClientMessenger
             }
         }
 
+        
         void ChangeControlText(TextBox _textBox, string text)
         {
             _textBox.Dispatcher.Invoke(new ThreadStart(delegate

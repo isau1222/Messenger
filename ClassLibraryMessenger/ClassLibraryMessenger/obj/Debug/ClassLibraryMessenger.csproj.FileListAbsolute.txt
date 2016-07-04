@@ -3,3 +3,8 @@ D:\Учебка\практика\ClassLibraryMessenger\ClassLibraryMessenger\bin
 D:\Учебка\практика\ClassLibraryMessenger\ClassLibraryMessenger\obj\Debug\ClassLibraryMessenger.dll
 D:\Учебка\практика\ClassLibraryMessenger\ClassLibraryMessenger\obj\Debug\ClassLibraryMessenger.pdb
 D:\Учебка\практика\ClassLibraryMessenger\ClassLibraryMessenger\obj\Debug\ClassLibraryMessenger.csprojResolveAssemblyReference.cache
+C:\Users\Andreas\Documents\GitHub\Messenger\ClassLibraryMessenger\ClassLibraryMessenger\bin\Debug\ClassLibraryMessenger.dll
+C:\Users\Andreas\Documents\GitHub\Messenger\ClassLibraryMessenger\ClassLibraryMessenger\bin\Debug\ClassLibraryMessenger.pdb
+C:\Users\Andreas\Documents\GitHub\Messenger\ClassLibraryMessenger\ClassLibraryMessenger\obj\Debug\ClassLibraryMessenger.csprojResolveAssemblyReference.cache
+C:\Users\Andreas\Documents\GitHub\Messenger\ClassLibraryMessenger\ClassLibraryMessenger\obj\Debug\ClassLibraryMessenger.dll
+C:\Users\Andreas\Documents\GitHub\Messenger\ClassLibraryMessenger\ClassLibraryMessenger\obj\Debug\ClassLibraryMessenger.pdb

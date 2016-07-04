@@ -70,11 +70,13 @@ namespace ClientMessenger
             image.Source = imSource;
 
             image.Stretch = Stretch.Uniform;
-            image.MaxHeight = 400;
-            image.MaxWidth = 400;
+            image.MaxHeight = 300;
+            image.MaxWidth = 300;
 
             image.Width = imSource.Width;
-            image.Height = imSource.Height - image.Height;
+            image.Height = imSource.Height;
+
+            image.MouseDown += image_MouseDown;
 
             image.Margin = SetMargin(5, image);
             image.HorizontalAlignment = HorizontalAlignment.Left; //по умолчанию картинка будем жаться к левому боку, потому что чужие сообщения слева
@@ -82,6 +84,21 @@ namespace ClientMessenger
             //image.HorizontalAlignment = HorizontalAlignment.Right; потому что мы отправитель и должны видеть наше детище справа
             return image;
         }
+
+        static void image_MouseDown(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Image).MaxHeight != 300)
+            {
+                (sender as Image).MaxHeight = 300;
+                (sender as Image).MaxWidth = 300;
+            }
+            else
+            {
+                (sender as Image).MaxHeight = (sender as Image).Source.Height;
+                (sender as Image).MaxWidth = (sender as Image).Source.Width;
+            }
+        }
+
 
         //дальше всякая херня, убирающая границы, внутренние оступы, внешние отступы
         public static Thickness SetPadding(int objPad, Control control)
