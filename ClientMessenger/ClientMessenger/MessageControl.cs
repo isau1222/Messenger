@@ -73,8 +73,7 @@ namespace ClientMessenger
             image.MaxHeight = 300;
             image.MaxWidth = 300;
 
-            image.Width = imSource.Width;
-            image.Height = imSource.Height;
+            image.Height -= imSource.Height;
 
             image.MouseDown += image_MouseDown;
 
