@@ -13,7 +13,8 @@ namespace ClientMessenger
         public string myText;
         public bool isPressed;
         public bool firstPress;
-        public MediaPlayer music;
+        //public MediaPlayer music;
+        public MediaElement music;
         public MyBorder()
             : base()
         {

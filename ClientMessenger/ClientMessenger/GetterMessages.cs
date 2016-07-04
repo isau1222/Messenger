@@ -140,15 +140,12 @@ namespace ClientMessenger
                                 {
                                     fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
                                     fs.Close();
-                                    if (msg.fileType == ".wav" || msg.fileType == ".mp3")
-                                    {
-                                        border.music = new MediaPlayer();
-                                        border.music.Open(new Uri(border.myText, UriKind.Relative));
+                                    border.music = new MediaElement();
+                                    border.music.UnloadedBehavior = MediaState.Manual;
+                                    border.music.Source = new Uri(border.myText);
 
-                                        border.MouseDown += chat.border_MouseDown;
-                                        chat.player = border.music;
-                                        chat.soundBorders.Add(border);
-                                    }
+                                    border.MouseDown += chat.border_MouseDown;
+                                    chat.soundBorders.Add(border);
                                 }
                                 chat.panelPole.Children.Add(border);
                             }
@@ -159,7 +156,7 @@ namespace ClientMessenger
                                 using (FileStream fs = new FileStream(directoryName + "\\" + msg.fileName, FileMode.Create))
                                 {
                                     fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
-                                    fs.Close();
+                                    //fs.Close();
 
                                     MediaElement myGif = MessageControl.CreateMediaElement(new Uri(Directory.GetCurrentDirectory() + "\\" + directoryName + "\\" + msg.fileName));
 
@@ -203,14 +200,6 @@ namespace ClientMessenger
             }
         }
 
-        //private void border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        //{
-        //    MediaPlayer player = new MediaPlayer();
-        //    player.Open(new Uri((sender as MyBorder).myText, UriKind.Relative));
-        //    player.Play();            
-        //}
-
-
         void ChangeControlText(TextBox _textBox, string text)
         {
             _textBox.Dispatcher.Invoke(new ThreadStart(delegate
@@ -220,7 +209,7 @@ namespace ClientMessenger
         }
 
         void PlayMessSound()
-        {
+        {  
             SoundPlayer mesSound = new SoundPlayer("chat_sound.wav");
             mesSound.Play();
         }
@@ -243,14 +232,6 @@ namespace ClientMessenger
                 else msg.fileName = name + "(" + index++ + ")" + type;
             }
         }
-
-        //void border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        //{
-        //    chat.Dispatcher.Invoke(new ThreadStart(delegate
-        //    {
-        //        chat.PlayMusic(new Uri((sender as MyBorder).myText, UriKind.Relative));
-        //    }));
-        //}
     }
 }
 

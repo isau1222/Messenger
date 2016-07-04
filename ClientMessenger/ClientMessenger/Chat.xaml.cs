@@ -43,7 +43,7 @@ namespace ClientMessenger
 
         public string clientName; //имя клиента
 
-        public MediaPlayer player;
+        public MediaElement player;
 
         public List<MyBorder> soundBorders;
 
@@ -55,7 +55,8 @@ namespace ClientMessenger
 
             clientName = _clientName;
 
-            player = new MediaPlayer();
+            player = new MediaElement();
+            player.UnloadedBehavior = MediaState.Manual;
             soundBorders = new List<MyBorder>();
 
             Connect(); //коннектимся
@@ -219,8 +220,9 @@ namespace ClientMessenger
 
                         border.MouseDown += border_MouseDown;
 
-                        border.music = new MediaPlayer();
-                        border.music.Open(new Uri(border.myText, UriKind.Relative));
+                        border.music = new MediaElement();
+                        border.music.Source = new Uri(border.myText);
+                        border.music.UnloadedBehavior = MediaState.Manual;
 
                         soundBorders.Add(border);
 
@@ -268,7 +270,6 @@ namespace ClientMessenger
                 if ((sender as MyBorder).isPressed == false)
                 {
                     (sender as MyBorder).isPressed = true;
-                    //PlayMusic(new Uri((sender as MyBorder).myText, UriKind.Relative));
                     player.Play();
                 }
                 else
@@ -277,12 +278,6 @@ namespace ClientMessenger
                     player.Pause();
                 }
             }
-        }
-
-        void PlayMusic(Uri uri)
-        {
-            player.Open(uri);
-            player.Play();
         }
 
         void SendImage(string filePath)
@@ -313,7 +308,7 @@ namespace ClientMessenger
             {
                 fileBytes = new byte[readMyFile.Length]; //создаем массив байтов такой длины, чтобы наш файл влез полностью
                 readMyFile.Read(fileBytes, 0, fileBytes.Length); // считываем байты файла в наш массив
-                readMyFile.Close();
+                //readMyFile.Close();
             }
 
             Message msg = new Message(clientName, fileBytes, System.IO.Path.GetExtension(filePath), fileName);//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
