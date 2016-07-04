@@ -34,8 +34,8 @@ namespace ClientMessenger
         const int port = 8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        //const string address = "128.204.46.128";//andrew
-        const string address = "192.168.3.8";//yula        
+        const string address = "128.204.46.128";//andrew
+        //const string address = "192.168.3.8";//yula        
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
         //const string address = "95.73.173.95";
@@ -194,7 +194,8 @@ namespace ClientMessenger
                 rashirenie = System.IO.Path.GetExtension(filePath);
                 if (rashirenie != ".png" && rashirenie != ".jpg" && rashirenie != ".gif")
                 {
-                    ShowMyError(rashirenie);
+                    SendFile(filePath);
+                    //ShowMyError(rashirenie);
                     return;
                 }
             }
@@ -226,6 +227,25 @@ namespace ClientMessenger
             {
                 ShowError(ex);
             }
+        }
+
+        void SendFile(string patch)
+        {
+            byte[] fileBytes;
+            using (FileStream readMyFile = new FileStream(patch, FileMode.Open))
+            {
+                fileBytes = new byte[readMyFile.Length]; //создаем массив байтов такой длины, чтобы наш файл влез полностью
+                readMyFile.Read(fileBytes, 0, fileBytes.Length); // считываем байты файла в наш массив=
+            }
+
+            Message msg = new Message(clientName, fileBytes, patch.Substring(patch.LastIndexOf('.')+1));//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
+
+            Border ownText = MessageControl.CreateUserText("Файл отправлен"); //создаём контрол (объект, содиржащийся в окне) (см. в конструкторе написано messageText)
+            //это контрол для сообщений пользователя. он типа Border, чтобы можно было закруглять края. в него уже вложен контрол TextBox хранящий в себе вообщение messageText
+            ownText.HorizontalAlignment = HorizontalAlignment.Right;//говорим нашему контролу с сообщением, что он должен выравниваться по правому краю, потому что его будет видеть сам отправитель
+            panelPole.Children.Add(ownText);
+            BinaryFormatter answFormatter = new BinaryFormatter();
+            answFormatter.Serialize(stream, (object)msg); //передаём наш мессандж
         }
 
         void SendSound() //будущий метод отправки музыки

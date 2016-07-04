@@ -26,6 +26,10 @@ namespace ClassLibraryMessenger
             public bool gotOut; //ушёл ли он
             public string[] clients; //список имен клиентов
             public byte[] image; //картиночка. тут используется массив byte[], а не объект класса Image, потому что объект класса Image НЕЛЬЗЯ сериализовать (и ImageSource тоже)! (одна из тонкостей, к которым нужно идти несколько часов)
+
+
+            public byte[] fileBytes;
+            public string fileType;
             //у меня здесь много разных конструкторов.
             public Message(string _clientName, string _text) //стандартный. вызывается приложением ClientMessenger, чтобы передать серверу, что клиент просто отправляет сообщение
             {
@@ -36,6 +40,8 @@ namespace ClassLibraryMessenger
                 gotOut = false;
                 clients = new string[0];
                 image = null;
+                fileType = null;
+                fileBytes = null;
             }
 
             public Message(string _clientName, string _text, bool _firstVisit)//вызывается приложением ClientMessenger, чтобы передать серверу, что клиент только что зашёл
@@ -48,6 +54,8 @@ namespace ClassLibraryMessenger
                 gotOut = false;
                 clients = new string[0];
                 image = null;
+                fileType = null;
+                fileBytes = null;
             }
 
             public Message(string _clientName, bool _gotOut)//вызывается приложением ClientMessenger, чтобы передать серверу, что клиент ушёл (а может и вылетел - без разницы)
@@ -59,6 +67,8 @@ namespace ClassLibraryMessenger
                 gotOut = _gotOut;
                 clients = new string[0];
                 image = null;
+                fileType = null;
+                fileBytes = null;
             }
 
             public Message(string _clientName, byte[] _image)//вызывается приложением ClientMessenger, чтобы передать серверу, что клиент отправил картинку
@@ -70,7 +80,22 @@ namespace ClassLibraryMessenger
                 gotOut = false;
                 clients = new string[0];
                 image = _image;
-            }        
+                fileType = null;
+                fileBytes = null;
+            }
+
+
+            public Message(string _clientName, byte[] _fileBytes, string _fileType)
+            {
+                clientName = _clientName;
+                text = "";
+                firstVisit = false;
+                gotOut = false;
+                clients = new string[0];
+                image = null;
+                fileType = _fileType;
+                fileBytes = _fileBytes;
+            }
 
             //public static byte[] ObjectToByteArray(object obj)  //это я использовал до тех крутых двух строчек
             //{

@@ -24,6 +24,7 @@ namespace ClientMessenger
     //это пятая глава. шестая (конец) - MessageControl
     class GetterMessages
     {
+        public static int IDFile = 0;
         NetworkStream stream;
         TextBox clientsBox;
         TcpClient client;
@@ -114,6 +115,19 @@ namespace ClientMessenger
                             chat.panelPole.Children.Add(messageText);//показываем уведомление "имя + прислал фото"
                             chat.panelPole.Children.Add(img);//показываем контрол Image, внутри которого принятый нами массив байтов msg.image, преобразованный в ImageSource (BitmapImage)
                         }));
+                    }
+                    else if (msg.fileType != null)
+                    {
+                        using (FileStream fs = new FileStream("" + IDFile + '.' + msg.fileType, FileMode.Create))
+                        {
+                            fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
+                        }
+                        chat.Dispatcher.Invoke(new ThreadStart(delegate
+                        {
+                            Border border = MessageControl.CreateUserText(msg.clientName + ": Отправил файл");
+                            chat.panelPole.Children.Add(border);
+                        }));
+
                     }
                     else //последний вариант: никто не ушел, не пришел, не отправил картинку
                     {

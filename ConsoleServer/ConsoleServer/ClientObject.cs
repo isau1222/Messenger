@@ -48,6 +48,10 @@ namespace ConsoleServer
                         {
                             Console.WriteLine(msg.clientName + ": прислал фото");
                         }
+                        else if (msg.fileType != null)
+                        {
+                            Console.WriteLine(msg.clientName + ": прислал файл");
+                        }
                         else
                         {
                             Console.WriteLine(msg.clientName + ": " + msg.text);
