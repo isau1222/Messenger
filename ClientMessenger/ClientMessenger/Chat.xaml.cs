@@ -44,8 +44,6 @@ namespace ClientMessenger
         List<MyBorder> soundBorders;
         public string clientName; //имя клиента
 
-        public MediaElement player;
-
         bool canScrollBottom;
 
         public Chat(string _clientName) //конструктор вызывается при закрытии окна Welcome. окно велком его вызывает и передаёт имя, введеноем клиентом при авторизации
@@ -56,8 +54,6 @@ namespace ClientMessenger
 
             clientName = _clientName;
 
-            player = new MediaElement();
-            player.UnloadedBehavior = MediaState.Manual;
             soundBorders = new List<MyBorder>();
             Connect(); //коннектимся
         }
