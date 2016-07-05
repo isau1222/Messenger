@@ -145,7 +145,7 @@ namespace ClientMessenger
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            TurnOffAll();//окно закрылось - гасим всё нахуй, иначе ошибок повылезает, мол поток не закрыт, клиент не закрыт, в результате сервер пиздой накроется
+            TurnOffAll();//окно закрылось - гасим всё, иначе ошибок повылезает, мол поток не закрыт, клиент не закрыт, в результате сервер накроется
         }
 
         void ClearLine(TextBox _textBox)

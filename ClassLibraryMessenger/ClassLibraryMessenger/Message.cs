@@ -71,7 +71,7 @@ namespace ClassLibraryMessenger
                 
             }
 
-            public static byte[] ImageSourceToBytes(BitmapEncoder encoder, BitmapSource imageSource) //разбивает ImageSource (содержимое элемента Image на байты). найти правильный алгоритм было очень трудно, кучу раз байты пересчитывал и вообще пиздос бля
+            public static byte[] ImageSourceToBytes(BitmapEncoder encoder, BitmapSource imageSource) //разбивает ImageSource (содержимое элемента Image на байты). найти правильный алгоритм было очень трудно, кучу раз байты пересчитывал и вообще
             {
                 byte[] bytes = null;
                 if (imageSource != null)
@@ -88,7 +88,7 @@ namespace ClassLibraryMessenger
                 return bytes;
             }//это статические метод, его вызывает слушатель ClientMessanger, отправляющий сообщения. он вызывает эту штуку, чтобы разбить свою картинку на байты и отправить на сервер
 
-            public static BitmapImage BytesToImageSource(byte[] bytes) //собирает ImageSource. найти правильный алгоритм было ЕЩЕ ТРУДНЕЕ, кучу раз байты пересчитывал и вообще пиздос бля
+            public static BitmapImage BytesToImageSource(byte[] bytes) //собирает ImageSource. найти правильный алгоритм было ЕЩЕ ТРУДНЕЕ, кучу раз байты пересчитывал и вообще
             {
                 MemoryStream stream = new MemoryStream(bytes);
                 BitmapImage imgSource = new BitmapImage();

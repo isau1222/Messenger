@@ -10,9 +10,9 @@ namespace ConsoleServer
     class Program
     {
         //const string ip = "192.168.1.19";//doma
-        const string ip = "128.204.40.151";//andrew
+        //const string ip = "128.204.40.151";//andrew
         //const string ip = "192.168.3.8";//yula
-        //const string ip = "10.210.51.4";//uni
+        const string ip = "10.210.51.4";//uni
         //const string ip = "192.168.70.1";
         const int port = 8080;
         static TcpListener listener;

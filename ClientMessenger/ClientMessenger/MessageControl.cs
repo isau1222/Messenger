@@ -82,7 +82,7 @@ namespace ClientMessenger
             return textBox;
         }
 
-        public static MyGif CreateMediaElement(Uri uri)//создатель сообщений-картинок
+        public static MyGif CreateMediaElement(Uri uri)//создатель сообщений-гифок
         {
             MyGif myGif = new MyGif();
             myGif.MediaEnded += myGif_MediaEnded;
