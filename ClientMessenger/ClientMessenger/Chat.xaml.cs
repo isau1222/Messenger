@@ -36,17 +36,15 @@ namespace ClientMessenger
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
         //const string address = "128.204.46.128";//andrew
-        const string address = "192.168.3.8";//yula        
+        const string address = "10.210.51.4";//uni     
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
         //const string address = "95.73.173.95";
-        
 
+        List<MyBorder> soundBorders;
         public string clientName; //имя клиента
 
         public MediaElement player;
-
-        public List<MyBorder> soundBorders;
 
         bool canScrollBottom;
 
@@ -61,7 +59,6 @@ namespace ClientMessenger
             player = new MediaElement();
             player.UnloadedBehavior = MediaState.Manual;
             soundBorders = new List<MyBorder>();
-
             Connect(); //коннектимся
         }
 
@@ -225,32 +222,52 @@ namespace ClientMessenger
                     }
                     else if (rashirenie == ".wav" || rashirenie == ".mp3")
                     {
-                        SendFile(filePath);
+                        if (SendFile(filePath))
+                        {
 
-                        MyBorder border = MessageControl.CreateUserText(System.IO.Path.GetFileName(filePath));
-                        border.myText = filePath;
-                        border.HorizontalAlignment = HorizontalAlignment.Right;
-                        Thickness padding = border.Padding;
-                        padding.Left = 25;
-                        border.Padding = padding;
+                            MyBorder border = MessageControl.CreateUserText(System.IO.Path.GetFileName(filePath));
+                            border.myText = filePath;
+                            border.HorizontalAlignment = HorizontalAlignment.Right;
+                            Thickness padding = border.Padding;
+                            padding.Left = 25;
+                            border.Padding = padding;
 
-                        border.MouseDown += border_MouseDown;
+                            border.MouseDown += border_MouseDown;
+                            soundBorders.Add(border);
 
-                        border.music = new MediaElement();
-                        border.music.Source = new Uri(border.myText, UriKind.Relative);
-                        border.music.UnloadedBehavior = MediaState.Manual;
+                            panelPole.Children.Add(border);
+                        }
+                        else
+                        {
+                            foreach (MyBorder b in soundBorders)
+                            {
+                                if (GetterMessages.myPlayer.Source == new Uri(b.myText))
+                                {
+                                    MyBorder border = MessageControl.CreateUserText(System.IO.Path.GetFileName(b.myText));
+                                    border.myText = b.myText;
+                                    border.HorizontalAlignment = HorizontalAlignment.Right;
+                                    Thickness padding = border.Padding;
+                                    padding.Left = 25;
+                                    border.Padding = padding;
 
-                        soundBorders.Add(border);
+                                    border.MouseDown += border_MouseDown;
 
-                        panelPole.Children.Add(border);
+                                    panelPole.Children.Add(border);
+                                    break;
+                                }
+                            }
+                            
+                        }
                     }
                     else if (rashirenie == ".gif")
                     {
-                        SendFile(filePath);
+                        if (SendFile(filePath))
+                        {
 
-                        MyGif myGif = MessageControl.CreateMediaElement(new Uri(filePath));
-                        myGif.HorizontalAlignment = HorizontalAlignment.Right;
-                        panelPole.Children.Add(myGif);
+                            MyGif myGif = MessageControl.CreateMediaElement(new Uri(filePath));
+                            myGif.HorizontalAlignment = HorizontalAlignment.Right;
+                            panelPole.Children.Add(myGif);
+                        }
                     }
                     else
                     {
@@ -266,34 +283,60 @@ namespace ClientMessenger
 
         public void border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            foreach (MyBorder soundBorder in soundBorders)
+           // MessageBox.Show((sender as MyBorder).myText);
+            if (GetterMessages.myPlayer!=null&&GetterMessages.myPlayer.Source == new Uri((sender as MyBorder).myText, UriKind.Absolute))
             {
-                if (soundBorder != (sender as MyBorder))
-                {
-                    soundBorder.isPressed = false;
-                }
-            }
-            player.Pause();
-            player = (sender as MyBorder).music;
-            if ((sender as MyBorder).firstPress == true)
-            {
-                (sender as MyBorder).firstPress = false;
-                (sender as MyBorder).isPressed = true;
-                player.Play();
-            }
-            else
-            {
-                if ((sender as MyBorder).isPressed == false)
-                {
-                    (sender as MyBorder).isPressed = true;
-                    player.Play();
+                if (GetterMessages.isPlay) {
+
+                GetterMessages.myPlayer.Pause();
+                GetterMessages.isPlay = false;
                 }
                 else
                 {
-                    (sender as MyBorder).isPressed = false;
-                    player.Pause();
+                    GetterMessages.myPlayer.Play();
+                    GetterMessages.isPlay = true;
                 }
             }
+            else
+            {
+                if (GetterMessages.myPlayer != null)
+                    GetterMessages.myPlayer.Close();
+                GetterMessages.myPlayer = new MediaElement();
+                GetterMessages.myPlayer.UnloadedBehavior = MediaState.Manual;
+                GetterMessages.myPlayer.Source = new Uri((sender as MyBorder).myText, UriKind.Absolute);
+                GetterMessages.myPlayer.Play();
+                GetterMessages.isPlay = true;
+            }
+
+
+            //foreach (MyBorder soundBorder in soundBorders)
+            //{
+            //    if (soundBorder != (sender as MyBorder))
+            //    {
+            //        soundBorder.isPressed = false;
+            //    }
+            //}
+            //player.Pause();
+            //player = (sender as MyBorder).music;
+            //if ((sender as MyBorder).firstPress == true)
+            //{
+            //    (sender as MyBorder).firstPress = false;
+            //    (sender as MyBorder).isPressed = true;
+            //    player.Play();
+            //}
+            //else
+            //{
+            //    if ((sender as MyBorder).isPressed == false)
+            //    {
+            //        (sender as MyBorder).isPressed = true;
+            //        player.Play();
+            //    }
+            //    else
+            //    {
+            //        (sender as MyBorder).isPressed = false;
+            //        player.Pause();
+            //    }
+            //}
         }
 
         void SendImage(string filePath)
@@ -316,15 +359,22 @@ namespace ClientMessenger
             answFormatter.Serialize(stream, (object)msg); //передаём наш мессандж
         }
 
-        void SendFile(string filePath)
+        bool SendFile(string filePath)
         {
             byte[] fileBytes;
             string fileName = System.IO.Path.GetFileName(filePath);
-            using (FileStream readMyFile = new FileStream(filePath, FileMode.Open))
+            try
             {
-                fileBytes = new byte[readMyFile.Length]; //создаем массив байтов такой длины, чтобы наш файл влез полностью
-                readMyFile.Read(fileBytes, 0, fileBytes.Length); // считываем байты файла в наш массив
-                //readMyFile.Close();
+                using (FileStream readMyFile = new FileStream(filePath, FileMode.Open))
+                {
+                    fileBytes = new byte[readMyFile.Length]; //создаем массив байтов такой длины, чтобы наш файл влез полностью
+                    readMyFile.Read(fileBytes, 0, fileBytes.Length); // считываем байты файла в наш массив
+                    //readMyFile.Close();
+                }
+            }
+            catch
+            {
+                return false;
             }
 
             Message msg = new Message(clientName, fileBytes, System.IO.Path.GetExtension(filePath), fileName);//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
@@ -335,6 +385,7 @@ namespace ClientMessenger
             panelPole.Children.Add(ownText);
             BinaryFormatter answFormatter = new BinaryFormatter();
             answFormatter.Serialize(stream, (object)msg); //передаём наш мессандж
+            return true;
         }
 
         void TurnOffAll()//вырубаем всё (что-то пошло не так)

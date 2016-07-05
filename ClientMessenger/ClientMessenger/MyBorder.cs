@@ -11,14 +11,9 @@ namespace ClientMessenger
     public class MyBorder : Border
     {
         public string myText;
-        public bool isPressed;
-        public bool firstPress;
-        public MediaElement music;
         public MyBorder() : base()
         {
             myText = "";
-            isPressed = false;
-            firstPress = true;
         }
     }
 }

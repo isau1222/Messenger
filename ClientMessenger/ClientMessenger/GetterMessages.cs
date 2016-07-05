@@ -25,6 +25,12 @@ namespace ClientMessenger
     //это пятая глава. шестая (конец) - MessageControl
     class GetterMessages
     {
+
+
+        public static MediaElement myPlayer = null;
+
+        public static bool isPlay = false;
+
         public static int IDFile = 0;
         NetworkStream stream;
         TextBox clientsBox;
@@ -140,12 +146,9 @@ namespace ClientMessenger
                                 {
                                     fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
                                     fs.Close();
-                                    border.music = new MediaElement();
-                                    border.music.UnloadedBehavior = MediaState.Manual;
-                                    border.music.Source = new Uri(border.myText, UriKind.Relative);
+
 
                                     border.MouseDown += chat.border_MouseDown;
-                                    chat.soundBorders.Add(border);
                                 }
                                 chat.panelPole.Children.Add(border);
                             }
@@ -153,13 +156,13 @@ namespace ClientMessenger
                             {
                                 string directoryName = "Gifes";
                                 CheckName(msg, directoryName);
-                                using (FileStream fs = new FileStream(directoryName + "\\" + msg.fileName, FileMode.Create))
+                                using (FileStream fs = new FileStream(directoryName + @"\" + msg.fileName, FileMode.Create))
                                 {
                                     fs.Write(msg.fileBytes, 0, msg.fileBytes.Length);
                                     //fs.Close();
 
                                     //MediaElement myGif = MessageControl.CreateMediaElement(new Uri(Directory.GetCurrentDirectory() + "\\" + directoryName + "\\" + msg.fileName));
-                                    MyGif myGif = MessageControl.CreateMediaElement(new Uri(directoryName + "\\" + msg.fileName, UriKind.Relative));
+                                    MyGif myGif = MessageControl.CreateMediaElement(new Uri(directoryName + @"\" + msg.fileName, UriKind.Relative));
 
                                     Border messageText = MessageControl.CreateUserText(msg.clientName + " прислал gif:");
                                     chat.panelPole.Children.Add(messageText);//показываем уведомление "имя + прислал фото"

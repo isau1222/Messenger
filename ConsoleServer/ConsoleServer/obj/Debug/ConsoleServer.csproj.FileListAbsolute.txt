@@ -26,6 +26,5 @@ C:\Users\Andreas\Documents\GitHub\Messenger\ConsoleServer\ConsoleServer\obj\Debu
 C:\Users\criit\Documents\GitHub\Messenger\ConsoleServer\ConsoleServer\bin\Debug\ConsoleServer.exe
 C:\Users\criit\Documents\GitHub\Messenger\ConsoleServer\ConsoleServer\bin\Debug\ConsoleServer.pdb
 C:\Users\criit\Documents\GitHub\Messenger\ConsoleServer\ConsoleServer\bin\Debug\ClassLibraryMessenger.dll
-C:\Users\criit\Documents\GitHub\Messenger\ConsoleServer\ConsoleServer\bin\Debug\MySql.Data.dll
 C:\Users\criit\Documents\GitHub\Messenger\ConsoleServer\ConsoleServer\bin\Debug\ClassLibraryMessenger.pdb
 C:\Users\criit\Documents\GitHub\Messenger\ConsoleServer\ConsoleServer\obj\Debug\ConsoleServer.csprojResolveAssemblyReference.cache
