@@ -7,13 +7,4 @@ using System.Windows.Controls;
 
 namespace ClientMessenger
 {
-    public class MyImage : Image
-    {
-        public bool canResize;
-
-        public MyImage()
-        {
-            canResize = false;
-        }
-    }
 }

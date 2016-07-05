@@ -128,6 +128,19 @@ namespace ConsoleServer
             {
                 clientObjects[i].SendMessage(clientObjects[i].stream, msg); //отправляем всем клиентам, что этот ушел
             }
+
+            try
+            {
+
+                stream.Dispose();
+                client.Close();
+            }
+            finally
+            {
+                clientObjects = null;
+                clientName = null;
+            }
+
         }
     }
 }

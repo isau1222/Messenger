@@ -28,15 +28,15 @@ namespace ClientMessenger
             borderThickness.Bottom = 0;
             border.BorderThickness = borderThickness;
 
-            border.CornerRadius = SetCornerRadius(12, border);//закругления (обрати внимание, эти 3 метода SetCornerRadius, SetPadding, SetMargin написаны мной)
-            border.Padding = SetPadding(4, border);
-            border.Margin = SetMargin(5, border);//всякие отступы
+            border.CornerRadius = SetCornerRadius(12);//закругления (обрати внимание, эти 3 метода SetCornerRadius, SetPadding, SetMargin написаны мной)
+            border.Padding = SetPadding(4);
+            border.Margin = SetMargin(5);//всякие отступы
 
             TextBox textBox = CreateText();
             textBox.Text = _text;
             textBox.HorizontalAlignment = HorizontalAlignment.Stretch;//растягиваем текстбокс повсему содержимому его РОДИТЕЛЯ (тут вся соль этих "свойств зависимостей". контрол ведет себя по разному находять внутри разных контролов!)
-            textBox.Margin = SetMargin(0, textBox);
-            textBox.Padding = SetPadding(0, textBox); //мы создали стандартный текст для уведомлений, чтобы положить его в наш красивый бордер. а там по стандарту есть отступы, вот мы их и зануляем
+            textBox.Margin = SetMargin(0);
+            textBox.Padding = SetPadding(0); //мы создали стандартный текст для уведомлений, чтобы положить его в наш красивый бордер. а там по стандарту есть отступы, вот мы их и зануляем
 
             border.Child = textBox;//усыновляем текстбокс
             return border;
@@ -74,8 +74,8 @@ namespace ClientMessenger
             borderThickness.Bottom = 0;
             textBox.BorderThickness = borderThickness;
             
-            textBox.Margin = SetMargin(5, textBox);
-            textBox.Padding = SetPadding(5, textBox);
+            textBox.Margin = SetMargin(5);
+            textBox.Padding = SetPadding(5);
 
             textBox.MaxWidth = 750; //максимальная ширина
 
@@ -98,7 +98,7 @@ namespace ClientMessenger
             myGif.MaxHeight = 300;
             myGif.MaxWidth = 300;
 
-            myGif.Margin = SetMargin(5, myGif);
+            myGif.Margin = SetMargin(5);
             myGif.HorizontalAlignment = HorizontalAlignment.Left; //по умолчанию картинка будем жаться к левому боку, потому что чужие сообщения слева
             myGif.Play();
 
@@ -129,8 +129,8 @@ namespace ClientMessenger
             }
             else
             {
-                (sender as FrameworkElement).MaxHeight = (sender is MyGif) ? (sender as MyGif).NaturalVideoHeight : (sender as MyImage).Source.Height;
-                (sender as FrameworkElement).MaxWidth = (sender is MyGif) ? (sender as MyGif).NaturalVideoWidth : (sender as MyImage).Source.Width;
+                (sender as FrameworkElement).MaxHeight = (sender is MyGif) ? (sender as MyGif).NaturalVideoHeight : (sender as Image).Source.Height;
+                (sender as FrameworkElement).MaxWidth = (sender is MyGif) ? (sender as MyGif).NaturalVideoWidth : (sender as Image).Source.Width;
 
             }
         }
@@ -144,80 +144,49 @@ namespace ClientMessenger
             }
         }
 
-        public static MyImage CreateImage(ImageSource imSource)//создатель сообщений-картинок
+        public static Image CreateImage(ImageSource imSource)//создатель сообщений-картинок
         {
-            MyImage myImage = new MyImage();
+            Image myImage = new Image();
             myImage.Source = imSource;
 
             myImage.Stretch = Stretch.Uniform;
-            myImage.canResize = true;
 
             if (myImage.Source.Height <= 300 && myImage.Source.Width <= 300)
             {
-                myImage.canResize = false;
                 myImage.MaxHeight = myImage.Source.Height;
                 myImage.MaxWidth = myImage.Source.Width;
             }
             else
             {
-                myImage.MouseDown += image_MouseDown;
+                myImage.MouseDown += myGif_MouseLeftButtonDown;
                 myImage.MaxHeight = 300;
                 myImage.MaxWidth = 300;
             }
 
-            myImage.Margin = SetMargin(5, myImage);
+            myImage.Margin = SetMargin(5);
             myImage.HorizontalAlignment = HorizontalAlignment.Left; //по умолчанию картинка будем жаться к левому боку, потому что чужие сообщения слева
             //но вот когда мы хотим отправить такую штуку, мы помимо этого статического метода CreateImage(source) пишем в создавшийся Image: 
             //image.HorizontalAlignment = HorizontalAlignment.Right; потому что мы отправитель и должны видеть наше детище справа
             return myImage;
         }
 
-        static void image_MouseDown(object sender, EventArgs e)
-        {
-            if ((sender as MyImage).canResize)
-            {
-                myGif_MouseLeftButtonDown(sender, e);
-            }
-        }
+        //static void image_MouseDown(object sender, EventArgs e)
+        //{
+        //    myGif_MouseLeftButtonDown(sender, e);
+        //}
 
 
         //дальше всякая херня, убирающая границы, внутренние оступы, внешние отступы
-        public static Thickness SetPadding(int objPad, Control control)
-        {
-            Thickness padding = control.Padding;
-            padding.Left = objPad;
-            padding.Top = objPad;
-            padding.Right = objPad;
-            padding.Bottom = objPad;
 
-            return padding;
+        public static Thickness SetPadding(double objPad)
+        {
+            return new Thickness(objPad);
         }
 
-        public static Thickness SetMargin(double objMarg, Control control)
+
+        public static Thickness SetMargin(double objMarg)
         {
-            Thickness margin = control.Margin;
-            margin.Top = objMarg;
-            margin.Bottom = objMarg;
-
-            return margin;
-        }
-
-        public static Thickness SetMargin(double objMarg, Image control)
-        {
-            Thickness margin = control.Margin;
-            margin.Top = objMarg;
-            margin.Bottom = objMarg;
-
-            return margin;
-        }
-
-        public static Thickness SetMargin(double objMarg,  MediaElement control)
-        {
-            Thickness margin = control.Margin;
-            margin.Top = objMarg;
-            margin.Bottom = objMarg;
-
-            return margin;
+            return new Thickness(0, objMarg, 0, objMarg);
         }
 
         public static void ScrollToBottom(ScrollViewer scrollViewer)
@@ -229,36 +198,12 @@ namespace ClientMessenger
             }));
         }
 
-        public static Thickness SetPadding(double objPad, Border control)
-        {
-            Thickness padding = control.Padding;
-            padding.Left = objPad;
-            padding.Top = objPad;
-            padding.Right = objPad;
-            padding.Bottom = objPad;
-
-            return padding;
-        }
-
-        public static Thickness SetMargin(double objMarg, Border control)
-        {
-            Thickness margin = control.Margin;
-            margin.Top = objMarg;
-            margin.Bottom = objMarg;
-
-            return margin;
-        }
+        
 
         //добавить скругление бордеру
-        public static CornerRadius SetCornerRadius(double rad, Border control)
+        public static CornerRadius SetCornerRadius(double rad)
         {
-            CornerRadius cornerRadius = control.CornerRadius;
-            cornerRadius.BottomLeft = rad;
-            cornerRadius.BottomRight = rad;
-            cornerRadius.TopLeft= rad;
-            cornerRadius.TopRight= rad;
-
-            return cornerRadius;
+            return new CornerRadius(rad);
         }
     }
 }
