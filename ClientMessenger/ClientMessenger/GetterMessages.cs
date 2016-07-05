@@ -136,7 +136,7 @@ namespace ClientMessenger
 
                                 MyBorder border = MessageControl.CreateUserText(msg.clientName + " отправил файл " + msg.fileName);
 
-                                border.myText = directoryName + "\\" + msg.fileName;
+                                border.myText =Directory.GetCurrentDirectory()+"\\"+ directoryName + "\\" + msg.fileName;
 
                                 Thickness padding = border.Padding;
                                 padding.Right = 25;
