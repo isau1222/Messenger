@@ -35,8 +35,8 @@ namespace ClientMessenger
         const int port = 8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        //const string address = "128.204.46.128";//andrew
-        const string address = "10.210.51.4";//uni     
+        const string address = "128.204.40.151";//andrew
+        //const string address = "10.210.51.4";//uni     
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
         //const string address = "95.73.173.95";
@@ -216,7 +216,7 @@ namespace ClientMessenger
 
                     canScrollBottom = true;
 
-                    if (rashirenie == ".jpg" || rashirenie == ".png")
+                    if (rashirenie == ".jpg" || rashirenie == ".png" || rashirenie == ".jpeg")//с .jpeg рабоатет, н окривовато
                     {
                         SendImage(filePath);
                     }

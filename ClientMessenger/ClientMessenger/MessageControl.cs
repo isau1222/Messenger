@@ -119,18 +119,19 @@ namespace ClientMessenger
             }
         }
 
-        private static void myGif_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private static void myGif_MouseLeftButtonDown(object sender, EventArgs e)
         {
 
-            if ((sender as MyGif).MaxHeight != 300)
+            if ((sender as FrameworkElement).MaxHeight != 300)
             {
-                (sender as MyGif).MaxHeight = 300;
-                (sender as MyGif).MaxWidth = 300;
+                (sender as FrameworkElement).MaxHeight = 300;
+                (sender as FrameworkElement).MaxWidth = 300;
             }
             else
             {
-                (sender as MyGif).MaxHeight = (sender as MyGif).NaturalVideoHeight;
-                (sender as MyGif).MaxWidth = (sender as MyGif).NaturalVideoWidth;
+                (sender as FrameworkElement).MaxHeight = (sender is MyGif) ? (sender as MyGif).NaturalVideoHeight : (sender as MyImage).Source.Height;
+                (sender as FrameworkElement).MaxWidth = (sender is MyGif) ? (sender as MyGif).NaturalVideoWidth : (sender as MyImage).Source.Width;
+
             }
         }
 
@@ -138,8 +139,7 @@ namespace ClientMessenger
         {
             if ((sender as MyGif).isPressed == false)
             {
-                (sender as MediaElement).Position = new TimeSpan(0, 0, 1);
-                (sender as MediaElement).Play();
+                myGif_MouseLeftButtonDown(sender, e);
             }
         }
 
