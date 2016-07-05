@@ -139,7 +139,8 @@ namespace ClientMessenger
         {
             if ((sender as MyGif).isPressed == false)
             {
-                myGif_MouseLeftButtonDown(sender, e);
+                (sender as MediaElement).Position = new TimeSpan(0, 0, 1);
+                (sender as MediaElement).Play();
             }
         }
 
@@ -179,16 +180,7 @@ namespace ClientMessenger
         {
             if ((sender as MyImage).canResize)
             {
-                if ((sender as MyImage).MaxHeight != 300)
-                {
-                    (sender as MyImage).MaxHeight = 300;
-                    (sender as MyImage).MaxWidth = 300;
-                }
-                else
-                {
-                    (sender as MyImage).MaxHeight = (sender as MyImage).Source.Height;
-                    (sender as MyImage).MaxWidth = (sender as MyImage).Source.Width;
-                }
+                myGif_MouseLeftButtonDown(sender, e);
             }
         }
 
