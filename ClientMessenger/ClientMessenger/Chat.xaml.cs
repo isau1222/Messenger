@@ -32,7 +32,7 @@ namespace ClientMessenger
         NetworkStream stream;
         TcpClient client;
         Thread threadNet; //поток дляпринимателя сообщений
-        const int port = 8080;
+        const int port = 8090;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
         const string address = "128.204.40.151";//andrew

@@ -131,7 +131,6 @@ namespace ConsoleServer
 
             try
             {
-
                 stream.Dispose();
                 client.Close();
             }
