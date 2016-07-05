@@ -150,9 +150,6 @@ namespace ClientMessenger
             myImage.Source = imSource;
 
             myImage.Stretch = Stretch.Uniform;
-            myImage.MaxHeight = 300;
-            myImage.MaxWidth = 300;
-
             myImage.canResize = true;
 
             if (myImage.Source.Height <= 300 && myImage.Source.Width <= 300)
@@ -164,6 +161,8 @@ namespace ClientMessenger
             else
             {
                 myImage.MouseDown += image_MouseDown;
+                myImage.MaxHeight = 300;
+                myImage.MaxWidth = 300;
             }
 
             myImage.Margin = SetMargin(5, myImage);
