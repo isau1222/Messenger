@@ -153,21 +153,18 @@ namespace ClientMessenger
             myImage.MaxHeight = 300;
             myImage.MaxWidth = 300;
 
-            if (myImage.Height <= myImage.Width)
+            myImage.canResize = true;
+
+            if (myImage.Source.Height <= 300 && myImage.Source.Width <= 300)
             {
-                myImage.Height -= imSource.Height;
+                myImage.canResize = false;
+                myImage.MaxHeight = myImage.Source.Height;
+                myImage.MaxWidth = myImage.Source.Width;
             }
             else
             {
-                myImage.Width -= imSource.Width;
+                myImage.MouseDown += image_MouseDown;
             }
-
-            if (myImage.MaxHeight < myImage.Source.Height) 
-            {
-                myImage.canResize = true;
-            }
-
-            myImage.MouseDown += image_MouseDown;
 
             myImage.Margin = SetMargin(5, myImage);
             myImage.HorizontalAlignment = HorizontalAlignment.Left; //по умолчанию картинка будем жаться к левому боку, потому что чужие сообщения слева
@@ -176,7 +173,7 @@ namespace ClientMessenger
             return myImage;
         }
 
-        static void image_MouseDown(object sender, RoutedEventArgs e)
+        static void image_MouseDown(object sender, EventArgs e)
         {
             if ((sender as MyImage).canResize)
             {
