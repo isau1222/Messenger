@@ -62,7 +62,7 @@ namespace ClientMessenger
                     BinaryFormatter outFormatter = new BinaryFormatter();
                     Message msg = (Message)outFormatter.Deserialize(stream); //ловим массив байтов и превращаем его в объект Message
 
-                    if (msg.firstVisit == true)//узнаем, что клиент только что зашел
+                    if (msg.mesMode == Message.MyMessageMode.LogIn)//узнаем, что клиент только что зашел
                     {
                         //тут начинается жесть. фундаментальная инфа: чтобы изменять объекты (или еще что-то) чужого потока, нужны делегаты
                         //нельзя просто так взять и сказать: эй, главное окно, я хочу изменить текст в твоём textSend. нужно вклиниваться туда
@@ -87,7 +87,7 @@ namespace ClientMessenger
                         }));
 
                     }
-                    else if (msg.gotOut)//опаньки. кто-то ушел
+                    else if (msg.mesMode == Message.MyMessageMode.LogOut)//опаньки. кто-то ушел
                     {
                         chat.Dispatcher.Invoke(new ThreadStart(delegate
                         {
@@ -108,7 +108,7 @@ namespace ClientMessenger
 
                         PlayMessSound();
                     }
-                    else if (msg.image != null) //если мы получили НЕ пустой массив байтов image
+                    else if (msg.mesMode == Message.MyMessageMode.NewImage) //если мы получили НЕ пустой массив байтов image
                     {//то есть это условие нам гарантирует, что мы не увидим нашу картинку еще раз
                         BitmapImage bitImg = Message.BytesToImageSource(msg.image); //конвертируем массив байтов в BitmapImage (напомню, что BitmapImage, ImageSource, BitmapSource супер схожие вещи)
                         //то есть мы получаем ImageSource, а не контрол Image, потому что ImageSource - это картинка, находящаяся внитри Image. именно она то нам и нужна
@@ -125,7 +125,7 @@ namespace ClientMessenger
                         }));
                         PlayMessSound();
                     }
-                    else if (msg.fileType != null)
+                    else if (msg.mesMode == Message.MyMessageMode.NewMusic)
                     {
                         chat.Dispatcher.Invoke(new ThreadStart(delegate
                         {

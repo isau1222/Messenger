@@ -83,7 +83,7 @@ namespace ClientMessenger
                 threadNet.Start(); //запускаем поток принятия сообщений
 
                 string messageText = ""; //заглушка. нам не нужен текст, ведь клиент просто зашел. он пока что ничего не написал
-                Message msg = new Message(clientName, messageText, true); //создаём конструктором, который говорит, что это firstVisit == true
+                Message msg = new Message(Message.MyMessageMode.LogIn, new Tuple<string>(clientName)); //создаём конструктором, который говорит, что это firstVisit == true
 
                 BinaryFormatter answFormatter = new BinaryFormatter();
                 answFormatter.Serialize(stream, (object)msg); //разбиваем и отправляем наш объект msg
@@ -128,7 +128,7 @@ namespace ClientMessenger
                 //(например типа "сообщение от сервера" или "сообщение от клиента (другого)") автоматически заполняло мне все желаемые свойства (например скругленные края; или оступы от други контролов)
 
                 //теперь уже создаём сообщение, серелизуем его и отправляем на сервер
-                Message msg = new Message(clientName, messageText);//см. это стандартный конструктор, при котором клиент просто хочет отправить сообщение
+                Message msg = new Message(Message.MyMessageMode.NewMessage, new Tuple<string,string>(clientName, messageText));//см. это стандартный конструктор, при котором клиент просто хочет отправить сообщение
                 BinaryFormatter answFormatter = new BinaryFormatter();
                 answFormatter.Serialize(stream, (object)msg);
                 //там на сервере сервер отошлет это сообщение всем свои клиентам, а они в методе GetterMessages.GetMessages уже будут его получать и отображать
@@ -353,7 +353,7 @@ namespace ClientMessenger
 
             //BitmapSource, ImageSource, BitmapImage - это всё классы чуть ли не одного типа, так что они легко друг в друга переходят
             byte[] imageBytes = Message.ImageSourceToBytes(new PngBitmapEncoder(), sc); //получаем массив байтов нашим статическим методом. этот массив байтов и есть наша картинка (точнее её содержимое ImageSource, потому что Image - это контрол, а одно из его свойств - ImageSource)
-            Message msg = new Message(clientName, imageBytes);//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
+            Message msg = new Message(Message.MyMessageMode.NewImage, new Tuple<string,byte[]>(clientName, imageBytes));//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
 
             BinaryFormatter answFormatter = new BinaryFormatter();
             answFormatter.Serialize(stream, (object)msg); //передаём наш мессандж
@@ -377,7 +377,7 @@ namespace ClientMessenger
                 return false;
             }
 
-            Message msg = new Message(clientName, fileBytes, System.IO.Path.GetExtension(filePath), fileName);//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
+            Message msg = new Message(Message.MyMessageMode.NewMusic,new Tuple<string,string,byte[],string>(clientName, System.IO.Path.GetExtension(filePath),fileBytes, fileName));//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
 
             Border ownText = MessageControl.CreateUserText("Файл " + fileName + " отправлен"); //создаём контрол (объект, содиржащийся в окне) (см. в конструкторе написано messageText)
             //это контрол для сообщений пользователя. он типа Border, чтобы можно было закруглять края. в него уже вложен контрол TextBox хранящий в себе вообщение messageText

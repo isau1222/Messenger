@@ -38,17 +38,17 @@ namespace ConsoleServer
                     string message = msg.text; //получаем, что клиент написал
                     clientName = msg.clientName; //получаем имя клиента
 
-                    if (msg.firstVisit == true) //получаем, авторизировался ли клиент только что
+                    if (msg.mesMode == Message.MyMessageMode.LogIn) //получаем, авторизировался ли клиент только что
                     {
                         HeJoinedUs(msg); //говорим всем (и даже самому клиенту), что клиент, отправивший объект msg только что зашел
                     }
                     else
                     { //firstVisit == false => он не только что зашел, а отправил объект msg, потому что хочет отправить что-то
-                        if (msg.image != null) //если есть картинка (msg.image - массив байтов), значит клиент отправил картинку
+                        if (msg.mesMode == Message.MyMessageMode.NewImage) //если есть картинка (msg.image - массив байтов), значит клиент отправил картинку
                         {
                             Console.WriteLine(msg.clientName + ": прислал фото");
                         }
-                        else if (msg.fileType != null)
+                        else if (msg.mesMode == Message.MyMessageMode.NewMusic)
                         {
                             Console.WriteLine(msg.clientName + ": прислал файл");
                         }
@@ -113,7 +113,7 @@ namespace ConsoleServer
         void HeLeftUs()
         {
             //тут уже нужно новое сообщение, тк связь с клиентом потерена => от него и не было никаких сообщений
-            Message msg = new Message(clientName, true); //конструктор, создающий сообщение говорящее о том, что клиент ушел (clientName мы узнали, когда он зашел, так что можем всем сказать, как его звали)
+            Message msg = new Message(Message.MyMessageMode.LogOut, new Tuple<string>(clientName)); //конструктор, создающий сообщение говорящее о том, что клиент ушел (clientName мы узнали, когда он зашел, так что можем всем сказать, как его звали)
             clientObjects.Remove(this);//обязательно удаляем этого clientObject из списка clientObjects, чтобы сервер к нему не обращался (ведь клиента больше нет)
             Console.WriteLine("Нас покинул " + clientName);
 

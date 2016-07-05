@@ -20,111 +20,56 @@ namespace ClassLibraryMessenger
 
     public class Message : Object
     {
+        public enum MyMessageMode { NewMessage, LogIn, LogOut, NewImage, NewMusic}
+
             public string clientName; //имя клиента
             public string text; //его сообщение
-            public bool firstVisit; //зашел ли он впервые
-            public bool gotOut; //ушёл ли он
+
             public string[] clients; //список имен клиентов
             public byte[] image; //картиночка. тут используется массив byte[], а не объект класса Image, потому что объект класса Image НЕЛЬЗЯ сериализовать (и ImageSource тоже)! (одна из тонкостей, к которым нужно идти несколько часов)
-
 
             public byte[] fileBytes;
             public string fileType;
             public string fileName;
-            //у меня здесь много разных конструкторов.
-            public Message(string _clientName, string _text) //стандартный. вызывается приложением ClientMessenger, чтобы передать серверу, что клиент просто отправляет сообщение
+
+            public MyMessageMode mesMode;
+
+            public Message(MyMessageMode _mesMode, object _myTuple)
             {
-                //поэтому всё null кроме имени и текста сообщения
-                clientName = _clientName;
-                text = _text;
-                firstVisit = false;
-                gotOut = false;
-                clients = new string[0];
-                image = null;
-                fileType = null;
-                fileBytes = null;
-                fileName = null;
+                mesMode = _mesMode;
+
+                if (_mesMode == MyMessageMode.NewMessage)
+                {
+                    Tuple<string, string> UnCodeTuple = (Tuple<string, string>)_myTuple;
+                    clientName = UnCodeTuple.Item1;
+                    text = UnCodeTuple.Item2;
+                }
+                else if (_mesMode == MyMessageMode.LogIn)
+                {
+                    Tuple<string> UnCodeTuple = (Tuple<string>)_myTuple;
+                    clientName = UnCodeTuple.Item1;
+                }
+                else if (_mesMode == MyMessageMode.LogOut)
+                {
+                    Tuple<string> UnCodeTuple = (Tuple<string>)_myTuple;
+                    clientName = UnCodeTuple.Item1;
+                }
+                else if (_mesMode == MyMessageMode.NewImage)
+                {
+                    Tuple<string, byte[]> UnCodeTuple = (Tuple<string, byte[]>)_myTuple;
+                    clientName = UnCodeTuple.Item1;
+                    image = UnCodeTuple.Item2;
+                }
+                else if (_mesMode == MyMessageMode.NewMusic)
+                {
+                    Tuple<string, string, byte[], string> UnCodeTuple = (Tuple<string, string, byte[], string>)_myTuple;
+                    clientName = UnCodeTuple.Item1;
+                    fileType = UnCodeTuple.Item2;
+                    fileBytes = UnCodeTuple.Item3;
+                    fileName = UnCodeTuple.Item4;
+                }
+                
             }
-
-            public Message(string _clientName, string _text, bool _firstVisit)//вызывается приложением ClientMessenger, чтобы передать серверу, что клиент только что зашёл
-            {
-                //(здесь так же присутствует параметр _text, но он здесь как заглушка, потому что без него этот конструктор будет выглядит как следующий (конструктор выхода)
-                //(_firstVisit должен быть тру!)
-                clientName = _clientName;
-                text = "";
-                firstVisit = _firstVisit;
-                gotOut = false;
-                clients = new string[0];
-                image = null;
-                fileType = null;
-                fileBytes = null;
-                fileName = null;
-            }
-
-            public Message(string _clientName, bool _gotOut)//вызывается приложением ClientMessenger, чтобы передать серверу, что клиент ушёл (а может и вылетел - без разницы)
-            {
-                //поэтому здесь только имя да булевское gotOut (оно должно быть тру!)
-                clientName = _clientName;
-                text = "";
-                firstVisit = false;
-                gotOut = _gotOut;
-                clients = new string[0];
-                image = null;
-                fileType = null;
-                fileBytes = null;
-                fileName = null;
-            }
-
-            public Message(string _clientName, byte[] _image)//вызывается приложением ClientMessenger, чтобы передать серверу, что клиент отправил картинку
-            {
-                //только имя, да картинка
-                clientName = _clientName;
-                text = "";
-                firstVisit = false;
-                gotOut = false;
-                clients = new string[0];
-                image = _image;
-                fileType = null;
-                fileBytes = null;
-                fileName = null;
-            }
-
-
-            public Message(string _clientName, byte[] _fileBytes, string _fileType, string _fileName)
-            {
-                clientName = _clientName;
-                text = "";
-                firstVisit = false;
-                gotOut = false;
-                clients = new string[0];
-                image = null;
-                fileType = _fileType;
-                fileBytes = _fileBytes;
-                fileName = _fileName;
-            }
-
-            //public static byte[] ObjectToByteArray(object obj)  //это я использовал до тех крутых двух строчек
-            //{
-            //    if (obj == null)
-            //        return null;
-            //    BinaryFormatter bf = new BinaryFormatter();
-            //    using (MemoryStream ms = new MemoryStream())
-            //    {
-            //        bf.Serialize(ms, obj);
-            //        return ms.ToArray();
-            //    }
-            //}
-
-            //public static Object ByteArrayToObject(byte[] arrBytes)
-            //{
-            //    MemoryStream memStream = new MemoryStream();
-            //    BinaryFormatter binForm = new BinaryFormatter();
-            //    memStream.Write(arrBytes, 0, arrBytes.Length);
-            //    memStream.Seek(0, SeekOrigin.Begin);
-            //    Object obj = (Object)binForm.Deserialize(memStream);
-
-            //    return obj;
-            //}
 
             public static byte[] ImageSourceToBytes(BitmapEncoder encoder, BitmapSource imageSource) //разбивает ImageSource (содержимое элемента Image на байты). найти правильный алгоритм было очень трудно, кучу раз байты пересчитывал и вообще пиздос бля
             {
