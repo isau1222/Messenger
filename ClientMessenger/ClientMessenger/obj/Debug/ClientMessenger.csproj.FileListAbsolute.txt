@@ -68,3 +68,5 @@ C:\Users\AAs.15\Desktop\Messenger-master\Messenger-master\ClientMessenger\Client
 C:\Users\AAs.15\Desktop\Messenger-master\Messenger-master\ClientMessenger\ClientMessenger\obj\Debug\ClientMessenger.csproj.GenerateResource.Cache
 C:\Users\Andreas\Documents\GitHub\Messenger\ClientMessenger\ClientMessenger\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\Andreas\Documents\GitHub\Messenger\ClientMessenger\ClientMessenger\obj\Debug\ClientMessenger_MarkupCompile.lref
+C:\Users\criit\Documents\GitHub\Messenger\ClientMessenger\ClientMessenger\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\criit\Documents\GitHub\Messenger\ClientMessenger\ClientMessenger\obj\Debug\ClientMessenger_MarkupCompile.lref

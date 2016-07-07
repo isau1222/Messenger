@@ -276,7 +276,9 @@ namespace ClientMessenger
                                     padding.Left = 25;
                                     border.Padding = padding;
 
-                                    border.MouseDown += border_MouseDown;
+                                    border.MouseDown += specialBorder_MouseDown;
+                                    border.myNum = b.myNum;
+                                    border.Background = Brushes.LightBlue;
 
                                     panelPole.Children.Add(border);
                                     break;
@@ -304,6 +306,50 @@ namespace ClientMessenger
             catch (Exception ex)
             {
                 ShowError(ex);
+            }
+        }
+
+        void specialBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MyBorder br = soundBorders[(sender as MyBorder).myNum];
+            soundBorders[soundBorderNum].Background = Brushes.LightGray;
+            br.Background = Brushes.LightGray;
+            soundBorderNum = br.myNum;
+
+            if (playerPanel.Visibility == Visibility.Collapsed)
+            {
+                playerPanel.Visibility = Visibility.Visible;
+            }
+
+            if (GetterMessages.myPlayer != null && GetterMessages.myPlayer.Source == new Uri(br.myText, UriKind.Absolute))
+            {
+
+                if (GetterMessages.isPlay)
+                {
+                    turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Play);
+                    GetterMessages.myPlayer.Pause();
+                    GetterMessages.isPlay = false;
+                    br.Background = Brushes.LightGreen;
+                }
+                else
+                {
+                    turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
+                    GetterMessages.myPlayer.Play();
+                    GetterMessages.isPlay = true;
+                    br.Background = Brushes.YellowGreen;
+                }
+            }
+            else
+            {
+                if (GetterMessages.myPlayer != null)
+                    GetterMessages.myPlayer.Close();
+                GetterMessages.myPlayer = new MediaElement();
+                GetterMessages.myPlayer.UnloadedBehavior = MediaState.Manual;
+                GetterMessages.myPlayer.Source = new Uri(br.myText, UriKind.Absolute);
+                GetterMessages.myPlayer.Play();
+                GetterMessages.isPlay = true;
+                br.Background = Brushes.YellowGreen;
+                turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
             }
         }
 
@@ -345,6 +391,7 @@ namespace ClientMessenger
                 GetterMessages.myPlayer.Play();
                 GetterMessages.isPlay = true;
                 (sender as MyBorder).Background = Brushes.YellowGreen;
+                turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
             }
         }
 
