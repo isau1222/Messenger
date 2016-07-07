@@ -16,6 +16,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -23,10 +24,13 @@ using System.Windows.Shapes;
 
 namespace ClientMessenger
 {
+
+    
     /// <summary>
     /// Логика взаимодействия для Chat.xaml (chat.xaml - наше wpf окно. в этому классе мы имеет доступ к нашим объектам на в окне)
     /// </summary>
     //это четвертая глава.  пятая - GetterMessages
+
     public partial class Chat : Window
     {
         NetworkStream stream;
@@ -57,13 +61,21 @@ namespace ClientMessenger
             clientName = _clientName;
 
             soundBorders = new List<MyBorder>();
-            turnLeft.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Left.png"));
-            turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Pause.png"));
-            turnRight.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Right.png"));
+            turnLeft.Source = CreateBrushFromBitmap(Properties.Resources.Left);
+            turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
+            turnRight.Source = CreateBrushFromBitmap(Properties.Resources.Right);
+          //turnLeft.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Left.png"));
+            //turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Pause.png"));
+           // turnRight.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Right.png"));
 
             playerPanel.Visibility = Visibility.Collapsed;
 
             Connect(); //коннектимся
+        }
+
+        public static BitmapSource CreateBrushFromBitmap(System.Drawing.Bitmap bmp)
+        {
+            return Imaging.CreateBitmapSourceFromHBitmap(bmp.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
         }
 
         void Connect()
@@ -131,7 +143,6 @@ namespace ClientMessenger
                 panelPole.Children.Add(ownText);//добавляем этот контрол на нашу панель сообщений (а она там сама всё компанует как надо)
                 //класс MessageControl состоит из статических методов. я его сделал, чтобы каждый новый контрол был желаемого мне типа (вида)
                 //(например типа "сообщение от сервера" или "сообщение от клиента (другого)") автоматически заполняло мне все желаемые свойства (например скругленные края; или оступы от други контролов)
-
                 //теперь уже создаём сообщение, серелизуем его и отправляем на сервер
                 Message msg = new Message(Message.MyMessageMode.NewMessage, new Tuple<string,string>(clientName, messageText));//см. это стандартный конструктор, при котором клиент просто хочет отправить сообщение
                 BinaryFormatter answFormatter = new BinaryFormatter();
@@ -303,14 +314,14 @@ namespace ClientMessenger
 
                 if (GetterMessages.isPlay)
                 {
-                    turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Play.png"));
+                    turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Play);
                     GetterMessages.myPlayer.Pause();
                     GetterMessages.isPlay = false;
                     (sender as MyBorder).Background = Brushes.LightGreen;
                 }
                 else
                 {
-                    turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Pause.png"));
+                    turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
                     GetterMessages.myPlayer.Play();
                     GetterMessages.isPlay = true;
                     (sender as MyBorder).Background = Brushes.YellowGreen;
@@ -437,7 +448,7 @@ namespace ClientMessenger
             GetterMessages.myPlayer.Play();
             GetterMessages.isPlay = true;
             soundBorders[soundBorderNum].Background = Brushes.YellowGreen;
-            turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Pause.png"));
+            turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
         }
 
         private void turnRight_MouseDown(object sender, MouseButtonEventArgs e)
@@ -460,21 +471,21 @@ namespace ClientMessenger
             GetterMessages.myPlayer.Play();
             GetterMessages.isPlay = true;
             soundBorders[soundBorderNum].Background = Brushes.YellowGreen;
-            turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Pause.png"));
+            turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
         }
 
         private void turnPlayer_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (GetterMessages.isPlay == true)
             {
-                turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Play.png"));
+                turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Play);
                 GetterMessages.myPlayer.Pause();
                 GetterMessages.isPlay = false;
                 soundBorders[soundBorderNum].Background = Brushes.LightGreen;
             }
             else
             {
-                turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Pause.png"));
+                turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
                 GetterMessages.myPlayer.Play();
                 GetterMessages.isPlay = true;
                 soundBorders[soundBorderNum].Background = Brushes.YellowGreen;

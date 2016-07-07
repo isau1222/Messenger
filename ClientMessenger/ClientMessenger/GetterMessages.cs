@@ -19,7 +19,7 @@ using System.Windows.Documents;
 using System.Globalization;
 using System.Diagnostics;
 using System.Media;
-
+using ClientMessenger;
 namespace ClientMessenger
 {
     //это пятая глава. шестая (конец) - MessageControl
