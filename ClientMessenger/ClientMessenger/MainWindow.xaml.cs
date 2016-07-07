@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -24,6 +25,9 @@ namespace ClientMessenger
         public MainWindow()
         {
             InitializeComponent();
+            Directory.CreateDirectory(Directory.GetCurrentDirectory()+@"\StandartImages");
+            Directory.CreateDirectory(Directory.GetCurrentDirectory() + @"\Gifes");
+            Directory.CreateDirectory(Directory.GetCurrentDirectory() + @"\Sounds");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

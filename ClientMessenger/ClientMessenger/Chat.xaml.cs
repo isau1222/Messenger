@@ -59,7 +59,7 @@ namespace ClientMessenger
             clientsBox.IsReadOnly = true; //не даём клиенту вручную менять содержимое списка имен клиетов
 
             clientName = _clientName;
-
+            panelPole.OnAdd += panelPole_OnAdd;
             soundBorders = new List<MyBorder>();
             turnLeft.Source = CreateBrushFromBitmap(Properties.Resources.Left);
             turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
@@ -71,6 +71,14 @@ namespace ClientMessenger
             playerPanel.Visibility = Visibility.Collapsed;
 
             Connect(); //коннектимся
+        }
+
+        void panelPole_OnAdd(object sender, EventArgs e)
+        {
+            if (!canScrollBottom)
+            {
+                bottomButton.Visibility = Visibility.Visible;
+            }
         }
 
         public static BitmapSource CreateBrushFromBitmap(System.Drawing.Bitmap bmp)
@@ -405,10 +413,10 @@ namespace ClientMessenger
             {
                 MessageControl.ScrollToBottom(scrollViewer);
             }
-            else
-            {
-                bottomButton.Visibility = Visibility.Visible;
-            }
+            //else
+            //{
+            //    bottomButton.Visibility = Visibility.Visible;
+            //}
         }
 
         private void scrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
