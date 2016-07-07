@@ -180,30 +180,37 @@ namespace ClientMessenger
 
         void ShowError(Exception _ex) //фатальная ошибка
         {
+
             canScrollBottom = true;
-            TextBox message = MessageControl.CreateText(); //это уже контрол типа TextBox, а не Border. просто у него нет круглых краев. это сообщение, которое отобразится как сообщение от сервера 
-            //(хотя здесь не идёт прием от самого сервера. ClientMessenger здесь сам сообщает, что что-то пошло не так)
-            message.Text = "Ошибка: " + _ex.Message;
-            //message.HorizontalAlignment = HorizontalAlignment.Center; //он у нас по центру всегда должен быть
-            panelPole.Children.Add(message); //выводим его на панель
+            panelPole.Dispatcher.Invoke(delegate
+            {
+                TextBox message = MessageControl.CreateText(); //это уже контрол типа TextBox, а не Border. просто у него нет круглых краев. это сообщение, которое отобразится как сообщение от сервера 
+                //(хотя здесь не идёт прием от самого сервера. ClientMessenger здесь сам сообщает, что что-то пошло не так)
+                message.Text = "Ошибка: " + _ex.Message;
+                //message.HorizontalAlignment = HorizontalAlignment.Center; //он у нас по центру всегда должен быть
+                panelPole.Children.Add(message); //выводим его на панель
 
-            clientsBox.Text = "Ошибка";
-            repeateButton.Visibility = Visibility.Visible;//показываем рипит боттон
+                clientsBox.Text = "Ошибка";
+                repeateButton.Visibility = Visibility.Visible;//показываем рипит боттон
 
-            sendButton.IsEnabled = false; //отключаем возможность отправить сообщение (связи же нету)
-            //MessageControl.ScrollToBottom(scrollViewer); //наша стакПанель (панель для сообщений) находится внути контрола scrollViewer
-            //scrollViewer предназначен для прокрутки того, что у него внутри (а именно стакПанели)
-            MessageControl.ScrollToBottom(scrollViewer);
-            TurnOffAll(); //ну ты понял. пиздой накроется сервер без этого (мб)
+                sendButton.IsEnabled = false; //отключаем возможность отправить сообщение (связи же нету)
+                //MessageControl.ScrollToBottom(scrollViewer); //наша стакПанель (панель для сообщений) находится внути контрола scrollViewer
+                //scrollViewer предназначен для прокрутки того, что у него внутри (а именно стакПанели)
+                MessageControl.ScrollToBottom(scrollViewer);
+                TurnOffAll();
+            }); //ну ты понял. пиздой накроется сервер без этого (мб) 
         }
 
         void ShowMyError(string errMessage) //это уже не фатальная ошибка. это просто неправильное расширение картинки
         {
-            canScrollBottom = true;
-            TextBox message = MessageControl.CreateText(); //создаем текстБокс с надписью:
-            message.Text = "Неправильное расширение файла!";
-            //message.HorizontalAlignment = HorizontalAlignment.Center; //ставим по центру
-            panelPole.Children.Add(message);
+            panelPole.Dispatcher.Invoke(delegate
+            {
+                canScrollBottom = true;
+                TextBox message = MessageControl.CreateText(); //создаем текстБокс с надписью:
+                message.Text = "Неправильное расширение файла!";
+                //message.HorizontalAlignment = HorizontalAlignment.Center; //ставим по центру
+                panelPole.Children.Add(message);
+            });
         }
 
         private void textSend_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -229,6 +236,7 @@ namespace ClientMessenger
         private void fileAdder_Click(object sender, RoutedEventArgs e)//кнопка добавления картинки
         {
             Thread myAdder = new Thread(Addfile);
+            myAdder.IsBackground = true;
             myAdder.Start();
         }
         public void Addfile()
