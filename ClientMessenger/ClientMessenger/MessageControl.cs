@@ -33,6 +33,7 @@ namespace ClientMessenger
             border.Margin = SetMargin(5);//всякие отступы
 
             TextBox textBox = CreateText();
+            textBox.Background = Brushes.Transparent;
             textBox.Text = _text;
             textBox.HorizontalAlignment = HorizontalAlignment.Stretch;//растягиваем текстбокс повсему содержимому его РОДИТЕЛЯ (тут вся соль этих "свойств зависимостей". контрол ведет себя по разному находять внутри разных контролов!)
             textBox.Margin = SetMargin(0);

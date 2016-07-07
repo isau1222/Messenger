@@ -136,11 +136,15 @@ namespace ClientMessenger
 
                                 MyBorder border = MessageControl.CreateUserText(msg.clientName + " отправил файл " + msg.fileName);
 
-                                border.myText =Directory.GetCurrentDirectory()+"\\"+ directoryName + "\\" + msg.fileName;
+                                border.myText = Directory.GetCurrentDirectory()+"\\"+ directoryName + "\\" + msg.fileName;
 
                                 Thickness padding = border.Padding;
                                 padding.Right = 25;
                                 border.Padding = padding;
+
+                                chat.soundBorders.Add(border);
+                                border.myNum = chat.soundBorders.IndexOf(border);
+                                border.Background = Brushes.LightGray;
 
                                 using (FileStream fs = new FileStream(directoryName + "\\" + msg.fileName, FileMode.Create))
                                 {

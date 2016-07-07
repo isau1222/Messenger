@@ -14,6 +14,8 @@
             <RowDefinition MinHeight="115" Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -21,19 +23,30 @@
             <ColumnDefinition MinWidth="200" Width="*"/>
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
-        
-        <ScrollViewer Name="scrollViewer" VerticalScrollBarVisibility="Hidden" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Foreground="{x:Null}" ScrollChanged="scrollViewer_ScrollChanged">
+        <ScrollViewer Name="scrollViewer" VerticalScrollBarVisibility="Hidden" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Foreground="{x:Null}" ScrollChanged="scrollViewer_ScrollChanged">
             <StackPanel Name="panelPole"  VerticalAlignment="Bottom" Margin="15,15,7.5,7.5" SizeChanged="panelPole_SizeChanged">
             </StackPanel>
         </ScrollViewer>
-        <Border Padding="8" CornerRadius="12" SnapsToDevicePixels="True" Grid.Row="2" Grid.Column="1" MinHeight="60" MaxHeight="200" Margin="7.5,7.5,7.5,15" Background="White">
+        <Border Padding="8" CornerRadius="12" SnapsToDevicePixels="True" Grid.Row="4" Grid.Column="1" MinHeight="60" MaxHeight="200" Margin="7.5,7.5,7.5,15" Background="White">
             <TextBox Name="textSend" TextWrapping="Wrap"  BorderThickness="0" PreviewKeyDown="textSend_PreviewKeyDown" SpellCheck.IsEnabled="True"  TextChanged="textSend_TextChanged" FontSize="15" />
         </Border>
-        <Border CornerRadius="12" SnapsToDevicePixels="True" BorderThickness="0" Background="White" Grid.Row="2" Grid.Column="2" Margin="7.5,7.5,15,15" MouseDown="Button_Click_1" >
+        <Border CornerRadius="12" SnapsToDevicePixels="True" BorderThickness="0" Background="White" Grid.Row="4" Grid.Column="2" Margin="7.5,7.5,15,15" MouseDown="Button_Click_1" >
             <Label Content="Send" Name="sendButton" HorizontalContentAlignment="Center"  Background="Transparent" Foreground="#FF0097FF" BorderBrush="#00000000" Height="50" Width="150" FontSize="25" BorderThickness="0"/>
         </Border>
-            <Button Content="Repeate" Name="repeateButton" Grid.Row="1" Grid.Column="2" Margin="7.5,7.5,15,7.5" Height="50" Width="150" FontSize="20" Click="repeateButton_Click" BorderThickness="0"/>
-        <Button Name="fileAdder" Content="#" Grid.Row="2" Grid.Column="0" Margin="15,7.5,7.5,15" Height="50" Width="35" FontSize="30" Background="White" Foreground="#FF323232" BorderBrush="#00000000" Click="fileAdder_Click" BorderThickness="0"/>
+        <Button Content="Repeate" Name="repeateButton" Grid.Row="1" Grid.Column="2" Margin="7.5,7.5,15,7.5" Height="50" Width="150" FontSize="20" Click="repeateButton_Click" BorderThickness="0"/>
+        <StackPanel Name="playerPanel" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="2" Margin="7.5,7.5,15,7.5" Height="50" >
+            <Border Width="40" Height="40" Margin="5">
+                <Image Name="turnLeft" MouseDown="turnLeft_MouseDown" Source="pack://application:,,,/Resources/Left.png"/>
+            </Border>
+            <Border Width="50" Height="50" Margin="6,0,6,0">
+                <Image Name="turnPlayer" MouseDown="turnPlayer_MouseDown" Source="pack://application:,,,/Resources/Pause.png"/>
+            </Border>
+            <Border Width="40" Height="40" Margin="5">
+                <Image Name="turnRight" MouseDown="turnRight_MouseDown"  Source="pack://application:,,,/Resources/Right.png"/>
+            </Border>
+        </StackPanel>
+        <Button Name="fileAdder" Content="#" Grid.Row="4" Grid.Column="0" Margin="15,7.5,7.5,15" Height="50" Width="35" FontSize="30" Background="White" Foreground="#FF323232" BorderBrush="#00000000" Click="fileAdder_Click" BorderThickness="0"/>
         <TextBox Text="Ошибка" Name="clientsBox" Grid.Row="0" Grid.Column="2" Margin="7.5,15,15,7.5" TextWrapping="Wrap" VerticalContentAlignment="Top" BorderBrush="#00000000" Padding="10" FontSize="15" BorderThickness="0"/>
+        <Button Name="bottomButton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Height="20" Content="\/" Click="bottomButton_Click"/>
     </Grid>
 </Window>

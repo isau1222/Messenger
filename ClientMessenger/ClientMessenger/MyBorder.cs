@@ -11,6 +11,7 @@ namespace ClientMessenger
     public class MyBorder : Border
     {
         public string myText;
+        public int myNum;
         public MyBorder() : base()
         {
             myText = "";

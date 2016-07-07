@@ -32,16 +32,18 @@ namespace ClientMessenger
         NetworkStream stream;
         TcpClient client;
         Thread threadNet; //поток дляпринимателя сообщений
-        const int port = 8090;
+        const int port = 8080;
         //const string address = "95.73.181.69";
-        //const string address = "192.168.1.19";//doma
-        const string address = "128.204.40.151";//andrew
-        //const string address = "10.210.51.4";//uni     
+        const string address = "192.168.1.19";//doma
+        //const string address = "128.204.40.151";//andrew
+        //const string address = "10.210.51.4";//uni    
+        //const string address = "192.168.3.8";//yula
+        //const string address = "79.111.23.247";//andr
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
         //const string address = "95.73.173.95";
-
-        List<MyBorder> soundBorders;
+        int soundBorderNum = 0;
+        public List<MyBorder> soundBorders;
         public string clientName; //имя клиента
 
         bool canScrollBottom;
@@ -55,6 +57,12 @@ namespace ClientMessenger
             clientName = _clientName;
 
             soundBorders = new List<MyBorder>();
+            turnLeft.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Left.png"));
+            turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Pause.png"));
+            turnRight.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Right.png"));
+
+            playerPanel.Visibility = Visibility.Collapsed;
+
             Connect(); //коннектимся
         }
 
@@ -64,6 +72,7 @@ namespace ClientMessenger
             TurnOffAll(); //restart services (thread, client, stream)
 
             repeateButton.Visibility = Visibility.Collapsed; //прячем кнопку репит
+            bottomButton.Visibility = Visibility.Collapsed; //прячем кнопку репит
 
             sendButton.IsEnabled = true; //делаем кнопку отправки сообщений активной (мы выключим её, если что-то пойдёт не так)
 
@@ -130,8 +139,9 @@ namespace ClientMessenger
                 //там на сервере сервер отошлет это сообщение всем свои клиентам, а они в методе GetterMessages.GetMessages уже будут его получать и отображать
                 ClearLine(textSend);//отправили текс => надо очистить поле текста
 
-                scrollViewer.UpdateLayout();
-                scrollViewer.ScrollToEnd();
+                MessageControl.ScrollToBottom(scrollViewer);
+                //scrollViewer.UpdateLayout();
+                //scrollViewer.ScrollToEnd();
             }
             catch (Exception ex)
             {
@@ -220,7 +230,6 @@ namespace ClientMessenger
                     {
                         if (SendFile(filePath))
                         {
-
                             MyBorder border = MessageControl.CreateUserText(System.IO.Path.GetFileName(filePath));
                             border.myText = filePath;
                             border.HorizontalAlignment = HorizontalAlignment.Right;
@@ -230,6 +239,8 @@ namespace ClientMessenger
 
                             border.MouseDown += border_MouseDown;
                             soundBorders.Add(border);
+                            border.myNum = soundBorders.IndexOf(border);
+                            border.Background = Brushes.LightGray;
 
                             panelPole.Children.Add(border);
                         }
@@ -279,18 +290,30 @@ namespace ClientMessenger
 
         public void border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-           // MessageBox.Show((sender as MyBorder).myText);
-            if (GetterMessages.myPlayer!=null&&GetterMessages.myPlayer.Source == new Uri((sender as MyBorder).myText, UriKind.Absolute))
+            soundBorders[soundBorderNum].Background = Brushes.LightGray;
+            soundBorderNum = (sender as MyBorder).myNum;
+           
+            if (playerPanel.Visibility == Visibility.Collapsed)
             {
-                if (GetterMessages.isPlay) {
+                playerPanel.Visibility = Visibility.Visible;
+            }
 
-                GetterMessages.myPlayer.Pause();
-                GetterMessages.isPlay = false;
+            if (GetterMessages.myPlayer != null && GetterMessages.myPlayer.Source == new Uri((sender as MyBorder).myText, UriKind.Absolute))
+            {
+
+                if (GetterMessages.isPlay)
+                {
+                    turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Play.png"));
+                    GetterMessages.myPlayer.Pause();
+                    GetterMessages.isPlay = false;
+                    (sender as MyBorder).Background = Brushes.LightGreen;
                 }
                 else
                 {
+                    turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Pause.png"));
                     GetterMessages.myPlayer.Play();
                     GetterMessages.isPlay = true;
+                    (sender as MyBorder).Background = Brushes.YellowGreen;
                 }
             }
             else
@@ -302,37 +325,8 @@ namespace ClientMessenger
                 GetterMessages.myPlayer.Source = new Uri((sender as MyBorder).myText, UriKind.Absolute);
                 GetterMessages.myPlayer.Play();
                 GetterMessages.isPlay = true;
+                (sender as MyBorder).Background = Brushes.YellowGreen;
             }
-
-
-            //foreach (MyBorder soundBorder in soundBorders)
-            //{
-            //    if (soundBorder != (sender as MyBorder))
-            //    {
-            //        soundBorder.isPressed = false;
-            //    }
-            //}
-            //player.Pause();
-            //player = (sender as MyBorder).music;
-            //if ((sender as MyBorder).firstPress == true)
-            //{
-            //    (sender as MyBorder).firstPress = false;
-            //    (sender as MyBorder).isPressed = true;
-            //    player.Play();
-            //}
-            //else
-            //{
-            //    if ((sender as MyBorder).isPressed == false)
-            //    {
-            //        (sender as MyBorder).isPressed = true;
-            //        player.Play();
-            //    }
-            //    else
-            //    {
-            //        (sender as MyBorder).isPressed = false;
-            //        player.Pause();
-            //    }
-            //}
         }
 
         void SendImage(string filePath)
@@ -402,8 +396,7 @@ namespace ClientMessenger
             }
             else
             {
-                //textSend.Text = "давай иди вниз"; - временно
-                //нарисовать подсказку спуститься вниз
+                bottomButton.Visibility = Visibility.Visible;
             }
         }
 
@@ -412,6 +405,7 @@ namespace ClientMessenger
             if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
             {
                 canScrollBottom = true;
+                bottomButton.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -419,6 +413,71 @@ namespace ClientMessenger
             }
         }
 
+        private void bottomButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageControl.ScrollToBottom(scrollViewer);
+        }
+
+        private void turnLeft_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            GetterMessages.myPlayer.Close();
+            GetterMessages.myPlayer = new MediaElement();
+            GetterMessages.myPlayer.UnloadedBehavior = MediaState.Manual;
+            soundBorders[soundBorderNum].Background = Brushes.LightGray;
+            if (soundBorderNum == 0)
+            {
+                GetterMessages.myPlayer.Source = new Uri(soundBorders[soundBorders.Count - 1].myText, UriKind.Absolute);
+                soundBorderNum = soundBorders.Count - 1;
+            }
+            else
+            {
+                GetterMessages.myPlayer.Source = new Uri(soundBorders[soundBorderNum - 1].myText, UriKind.Absolute);
+                soundBorderNum--;
+            }
+            GetterMessages.myPlayer.Play();
+            GetterMessages.isPlay = true;
+            soundBorders[soundBorderNum].Background = Brushes.YellowGreen;
+        }
+
+        private void turnRight_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            GetterMessages.myPlayer.Close();
+            GetterMessages.myPlayer = new MediaElement();
+            GetterMessages.myPlayer.UnloadedBehavior = MediaState.Manual;
+            soundBorders[soundBorderNum].Background = Brushes.LightGray;
+            if (soundBorderNum == soundBorders.Count - 1)
+            {
+                GetterMessages.myPlayer.Source = new Uri(soundBorders[0].myText, UriKind.Absolute);
+                soundBorderNum = 0;
+            }
+            else
+            {
+                GetterMessages.myPlayer.Source = new Uri(soundBorders[soundBorderNum + 1].myText, UriKind.Absolute);
+                soundBorderNum++;
+            }
+            
+            GetterMessages.myPlayer.Play();
+            GetterMessages.isPlay = true;
+            soundBorders[soundBorderNum].Background = Brushes.YellowGreen;
+        }
+
+        private void turnPlayer_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (GetterMessages.isPlay == true)
+            {
+                turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Play.png"));
+                GetterMessages.myPlayer.Pause();
+                GetterMessages.isPlay = false;
+                soundBorders[soundBorderNum].Background = Brushes.LightGreen;
+            }
+            else
+            {
+                turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Pause.png"));
+                GetterMessages.myPlayer.Play();
+                GetterMessages.isPlay = true;
+                soundBorders[soundBorderNum].Background = Brushes.YellowGreen;
+            }
+        }
     }
 }
 //руководство: как добавить контрол на панель:
