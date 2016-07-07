@@ -228,6 +228,11 @@ namespace ClientMessenger
 
         private void fileAdder_Click(object sender, RoutedEventArgs e)//кнопка добавления картинки
         {
+            Thread myAdder = new Thread(Addfile);
+            myAdder.Start();
+        }
+        public void Addfile()
+        {
             try
             {
                 string filePath = "";
@@ -249,19 +254,22 @@ namespace ClientMessenger
                     {
                         if (SendFile(filePath))
                         {
-                            MyBorder border = MessageControl.CreateUserText(System.IO.Path.GetFileName(filePath));
-                            border.myText = filePath;
-                            border.HorizontalAlignment = HorizontalAlignment.Right;
-                            Thickness padding = border.Padding;
-                            padding.Left = 25;
-                            border.Padding = padding;
+                            panelPole.Dispatcher.Invoke(delegate
+                            {
+                                MyBorder border = MessageControl.CreateUserText(System.IO.Path.GetFileName(filePath));
+                                border.myText = filePath;
+                                border.HorizontalAlignment = HorizontalAlignment.Right;
+                                Thickness padding = border.Padding;
+                                padding.Left = 25;
+                                border.Padding = padding;
 
-                            border.MouseDown += border_MouseDown;
-                            soundBorders.Add(border);
-                            border.myNum = soundBorders.IndexOf(border);
-                            border.Background = Brushes.LightGray;
+                                border.MouseDown += border_MouseDown;
+                                soundBorders.Add(border);
+                                border.myNum = soundBorders.IndexOf(border);
+                                border.Background = Brushes.LightGray;
 
-                            panelPole.Children.Add(border);
+                                panelPole.Children.Add(border);
+                            });
                         }
                         else
                         {
@@ -269,32 +277,37 @@ namespace ClientMessenger
                             {
                                 if (GetterMessages.myPlayer.Source == new Uri(b.myText))
                                 {
-                                    MyBorder border = MessageControl.CreateUserText(System.IO.Path.GetFileName(b.myText));
-                                    border.myText = b.myText;
-                                    border.HorizontalAlignment = HorizontalAlignment.Right;
-                                    Thickness padding = border.Padding;
-                                    padding.Left = 25;
-                                    border.Padding = padding;
+                                    panelPole.Dispatcher.Invoke(delegate
+                                    {
+                                        MyBorder border = MessageControl.CreateUserText(System.IO.Path.GetFileName(b.myText));
+                                        border.myText = b.myText;
+                                        border.HorizontalAlignment = HorizontalAlignment.Right;
+                                        Thickness padding = border.Padding;
+                                        padding.Left = 25;
+                                        border.Padding = padding;
 
-                                    border.MouseDown += specialBorder_MouseDown;
-                                    border.myNum = b.myNum;
-                                    border.Background = Brushes.LightBlue;
+                                        border.MouseDown += specialBorder_MouseDown;
+                                        border.myNum = b.myNum;
+                                        border.Background = Brushes.LightBlue;
 
-                                    panelPole.Children.Add(border);
+                                        panelPole.Children.Add(border);
+                                    });
                                     break;
                                 }
                             }
-                            
+
                         }
                     }
                     else if (rashirenie == ".gif")
                     {
                         if (SendFile(filePath))
                         {
-
-                            MyGif myGif = MessageControl.CreateMediaElement(new Uri(filePath));
-                            myGif.HorizontalAlignment = HorizontalAlignment.Right;
-                            panelPole.Children.Add(myGif);
+                            panelPole.Dispatcher.Invoke(delegate
+                            {
+                                MyGif myGif = MessageControl.CreateMediaElement(new Uri(filePath));
+                                myGif.HorizontalAlignment = HorizontalAlignment.Right;
+                                panelPole.Children.Add(myGif);
+                            });
                         }
                     }
                     else
@@ -397,15 +410,20 @@ namespace ClientMessenger
 
         void SendImage(string filePath)
         {
-            Image img = new Image();
-            img.Source = new BitmapImage(new Uri(filePath));  //считываем картинку, которую выбрал клиент
+            Image img=null;
+            BitmapSource sc=null;
+            panelPole.Dispatcher.Invoke(delegate
+            {
+                img = new Image();
+                img.Source = new BitmapImage(new Uri(filePath));  //считываем картинку, которую выбрал клиент
 
-            Image ownImage = MessageControl.CreateImage(img.Source); //это контрол, который не пойдёт на сервер. этот контрол сразу увидет отправитель (и поймёт, что отправил картинку)
-            ownImage.HorizontalAlignment = HorizontalAlignment.Right; //ставим справа картинку. это же мы её отправили
-            panelPole.Children.Add(ownImage); //показываем
-
+                Image ownImage = MessageControl.CreateImage(img.Source); //это контрол, который не пойдёт на сервер. этот контрол сразу увидет отправитель (и поймёт, что отправил картинку)
+                ownImage.HorizontalAlignment = HorizontalAlignment.Right; //ставим справа картинку. это же мы её отправили
+                panelPole.Children.Add(ownImage); //показываем
+                sc = (BitmapSource)img.Source;
+            });
             //дальше идёт самый потный момент
-            BitmapSource sc = (BitmapSource)img.Source;
+            
 
             //BitmapSource, ImageSource, BitmapImage - это всё классы чуть ли не одного типа, так что они легко друг в друга переходят
             byte[] imageBytes = Message.ImageSourceToBytes(new PngBitmapEncoder(), sc); //получаем массив байтов нашим статическим методом. этот массив байтов и есть наша картинка (точнее её содержимое ImageSource, потому что Image - это контрол, а одно из его свойств - ImageSource)
@@ -432,13 +450,16 @@ namespace ClientMessenger
             {
                 return false;
             }
+            Message msg = null;
+            panelPole.Dispatcher.Invoke(delegate
+            {
+                msg = new Message(Message.MyMessageMode.NewMusic, new Tuple<string, string, byte[], string>(clientName, System.IO.Path.GetExtension(filePath), fileBytes, fileName));//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
 
-            Message msg = new Message(Message.MyMessageMode.NewMusic,new Tuple<string,string,byte[],string>(clientName, System.IO.Path.GetExtension(filePath),fileBytes, fileName));//создаем сообщение конструктором, указывающим, что пользователь захотел отправить картинку
-
-            Border ownText = MessageControl.CreateUserText("Файл " + fileName + " отправлен"); //создаём контрол (объект, содиржащийся в окне) (см. в конструкторе написано messageText)
-            //это контрол для сообщений пользователя. он типа Border, чтобы можно было закруглять края. в него уже вложен контрол TextBox хранящий в себе вообщение messageText
-            ownText.HorizontalAlignment = HorizontalAlignment.Right;//говорим нашему контролу с сообщением, что он должен выравниваться по правому краю, потому что его будет видеть сам отправитель
-            panelPole.Children.Add(ownText);
+                Border ownText = MessageControl.CreateUserText("Файл " + fileName + " отправлен"); //создаём контрол (объект, содиржащийся в окне) (см. в конструкторе написано messageText)
+                //это контрол для сообщений пользователя. он типа Border, чтобы можно было закруглять края. в него уже вложен контрол TextBox хранящий в себе вообщение messageText
+                ownText.HorizontalAlignment = HorizontalAlignment.Right;//говорим нашему контролу с сообщением, что он должен выравниваться по правому краю, потому что его будет видеть сам отправитель
+                panelPole.Children.Add(ownText);
+            });
             BinaryFormatter answFormatter = new BinaryFormatter();
             answFormatter.Serialize(stream, (object)msg); //передаём наш мессандж
             return true;
