@@ -34,8 +34,8 @@ namespace ClientMessenger
         Thread threadNet; //поток дляпринимателя сообщений
         const int port = 8080;
         //const string address = "95.73.181.69";
-        const string address = "192.168.1.19";//doma
-        //const string address = "128.204.40.151";//andrew
+        //const string address = "192.168.1.19";//doma
+        const string address = "176.194.51.236";//andrew
         //const string address = "10.210.51.4";//uni    
         //const string address = "192.168.3.8";//yula
         //const string address = "79.111.23.247";//andr
@@ -437,6 +437,7 @@ namespace ClientMessenger
             GetterMessages.myPlayer.Play();
             GetterMessages.isPlay = true;
             soundBorders[soundBorderNum].Background = Brushes.YellowGreen;
+            turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Pause.png"));
         }
 
         private void turnRight_MouseDown(object sender, MouseButtonEventArgs e)
@@ -459,6 +460,7 @@ namespace ClientMessenger
             GetterMessages.myPlayer.Play();
             GetterMessages.isPlay = true;
             soundBorders[soundBorderNum].Background = Brushes.YellowGreen;
+            turnPlayer.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/StandartImages/Pause.png"));
         }
 
         private void turnPlayer_MouseDown(object sender, MouseButtonEventArgs e)
