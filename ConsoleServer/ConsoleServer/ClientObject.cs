@@ -112,6 +112,8 @@ namespace ConsoleServer
 
         void HeLeftUs()
         {
+            try
+            {
             //тут уже нужно новое сообщение, тк связь с клиентом потерена => от него и не было никаких сообщений
             Message msg = new Message(Message.MyMessageMode.LogOut, new Tuple<string>(clientName)); //конструктор, создающий сообщение говорящее о том, что клиент ушел (clientName мы узнали, когда он зашел, так что можем всем сказать, как его звали)
             clientObjects.Remove(this);//обязательно удаляем этого clientObject из списка clientObjects, чтобы сервер к нему не обращался (ведь клиента больше нет)
@@ -129,8 +131,7 @@ namespace ConsoleServer
                 clientObjects[i].SendMessage(clientObjects[i].stream, msg); //отправляем всем клиентам, что этот ушел
             }
 
-            try
-            {
+            
                 stream.Dispose();
                 client.Close();
             }
