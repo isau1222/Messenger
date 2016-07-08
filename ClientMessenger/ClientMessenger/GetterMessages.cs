@@ -185,6 +185,8 @@ namespace ClientMessenger
                         }));
                         PlayMessSound();
                     }
+                    msg.fileBytes = null;
+                    msg.image = null;
                 }
             }
             catch (Exception ex)
