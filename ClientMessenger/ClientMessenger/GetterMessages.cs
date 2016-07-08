@@ -187,6 +187,7 @@ namespace ClientMessenger
                     }
                     msg.fileBytes = null;
                     msg.image = null;
+                    GC.Collect();
                 }
             }
             catch (Exception ex)
