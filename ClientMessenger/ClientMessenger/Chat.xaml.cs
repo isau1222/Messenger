@@ -36,11 +36,11 @@ namespace ClientMessenger
         NetworkStream stream;
         TcpClient client;
         Thread threadNet; //поток дляпринимателя сообщений
-        const int port = 8080;
+        const int port = 9080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        const string address = "176.194.51.236";//andrew
-        //const string address = "10.210.51.4";//uni    
+        //const string address = "176.194.51.236";//andrew
+        const string address = "10.210.51.4";//uni    
         //const string address = "192.168.3.8";//yula
         //const string address = "79.111.23.247";//andr
         //const string address = "95.72.62.103";
@@ -416,6 +416,8 @@ namespace ClientMessenger
             }
         }
 
+        object fileStreamLocker = new object();
+
         void SendImage(string filePath)
         {
             Image img=null;
@@ -428,7 +430,10 @@ namespace ClientMessenger
                 Image ownImage = MessageControl.CreateImage(img.Source); //это контрол, который не пойдёт на сервер. этот контрол сразу увидет отправитель (и поймёт, что отправил картинку)
                 ownImage.HorizontalAlignment = HorizontalAlignment.Right; //ставим справа картинку. это же мы её отправили
                 panelPole.Children.Add(ownImage); //показываем
-                sc = (BitmapSource)img.Source;
+                lock (fileStreamLocker)
+                {
+                    sc = (BitmapSource)img.Source;
+                }
             });
             //дальше идёт самый потный момент
             
@@ -447,11 +452,14 @@ namespace ClientMessenger
             string fileName = System.IO.Path.GetFileName(filePath);
             try
             {
-                using (FileStream readMyFile = new FileStream(filePath, FileMode.Open))
+                lock (fileStreamLocker)
                 {
-                    fileBytes = new byte[readMyFile.Length]; //создаем массив байтов такой длины, чтобы наш файл влез полностью
-                    readMyFile.Read(fileBytes, 0, fileBytes.Length); // считываем байты файла в наш массив
-                    //readMyFile.Close();
+                    using (FileStream readMyFile = new FileStream(filePath, FileMode.Open))
+                    {
+                        fileBytes = new byte[readMyFile.Length]; //создаем массив байтов такой длины, чтобы наш файл влез полностью
+                        readMyFile.Read(fileBytes, 0, fileBytes.Length); // считываем байты файла в наш массив
+                        //readMyFile.Close();
+                    }
                 }
             }
             catch
