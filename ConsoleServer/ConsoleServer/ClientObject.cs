@@ -63,6 +63,8 @@ namespace ConsoleServer
                                 clientObjects[i].SendMessage(clientObjects[i].stream, msg); //говорим всем нашим clientObjects, чтобы они оповестили своих клиентов о том, что клиент что-то написал
                         }
                     }
+                    msg.fileBytes = null;
+                    msg.image = null;
                 }
             }
             catch (Exception ex)

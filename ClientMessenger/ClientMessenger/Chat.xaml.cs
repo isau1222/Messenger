@@ -36,11 +36,11 @@ namespace ClientMessenger
         NetworkStream stream;
         TcpClient client;
         Thread threadNet; //поток дляпринимателя сообщений
-        const int port = 9080;
+        const int port =8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        //const string address = "176.194.51.236";//andrew
-        const string address = "10.210.51.4";//uni    
+        const string address = "128.204.8.36";//andrew
+        //const string address = "10.210.51.4";//uni    
         //const string address = "192.168.3.8";//yula
         //const string address = "79.111.23.247";//andr
         //const string address = "95.72.62.103";
@@ -281,28 +281,30 @@ namespace ClientMessenger
                         }
                         else
                         {
-                            foreach (MyBorder b in soundBorders)
-                            {
-                                if (GetterMessages.myPlayer.Source == new Uri(b.myText))
-                                {
-                                    panelPole.Dispatcher.Invoke(delegate
+                            panelPole.Dispatcher.Invoke(delegate
                                     {
-                                        MyBorder border = MessageControl.CreateUserText(System.IO.Path.GetFileName(b.myText));
-                                        border.myText = b.myText;
-                                        border.HorizontalAlignment = HorizontalAlignment.Right;
-                                        Thickness padding = border.Padding;
-                                        padding.Left = 25;
-                                        border.Padding = padding;
+                                        foreach (MyBorder b in soundBorders)
+                                        {
+                                            if (GetterMessages.myPlayer.Source == new Uri(b.myText))
+                                            {
 
-                                        border.MouseDown += specialBorder_MouseDown;
-                                        border.myNum = b.myNum;
-                                        border.Background = Brushes.LightBlue;
+                                                MyBorder border = MessageControl.CreateUserText(System.IO.Path.GetFileName(b.myText));
+                                                border.myText = b.myText;
+                                                border.HorizontalAlignment = HorizontalAlignment.Right;
+                                                Thickness padding = border.Padding;
+                                                padding.Left = 25;
+                                                border.Padding = padding;
 
-                                        panelPole.Children.Add(border);
+                                                border.MouseDown += specialBorder_MouseDown;
+                                                border.myNum = b.myNum;
+                                                border.Background = Brushes.LightBlue;
+
+                                                panelPole.Children.Add(border);
+
+                                                break;
+                                            }
+                                        }
                                     });
-                                    break;
-                                }
-                            }
 
                         }
                     }
