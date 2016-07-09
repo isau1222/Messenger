@@ -34,7 +34,7 @@
                 <TextBox Name="textSend" TextWrapping="Wrap"  BorderThickness="0" PreviewKeyDown="textSend_PreviewKeyDown" SpellCheck.IsEnabled="True"  TextChanged="textSend_TextChanged" FontSize="15" />
             </Border>
             <Border CornerRadius="12" SnapsToDevicePixels="True" BorderThickness="0" Background="White" Grid.Row="4" Grid.Column="2" Margin="7.5,7.5,15,15" MouseDown="Button_Click_1" >
-                <Label Content="Send" Name="sendButton" HorizontalContentAlignment="Center"  Background="Transparent" Foreground="#FF0097FF" BorderBrush="#00000000" Height="50" Width="150" FontSize="25" BorderThickness="0"/>
+                <Label Content="Send" Name="sendButton" HorizontalContentAlignment="Center"  Background="Transparent" Foreground="#FF0097FF" Height="50" Width="150" FontSize="25" BorderThickness="0"/>
             </Border>
             <Button Content="Repeate" Name="repeateButton" Grid.Row="1" Grid.Column="2" Margin="7.5,7.5,15,7.5" Height="50" Width="150" FontSize="20" Click="repeateButton_Click" BorderThickness="0"/>
             <StackPanel Name="playerPanel" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="2" Margin="7.5,7.5,15,7.5" Height="50" >
@@ -48,11 +48,11 @@
                     <Image Name="turnRight" MouseDown="turnRight_MouseDown"  Source="pack://application:,,,/Resources/Right.png"/>
                 </Border>
             </StackPanel>
-            <Button Name="fileAdder" Content="#" Grid.Row="4" Grid.Column="0" Margin="15,7.5,7.5,15" Height="50" Width="35" FontSize="30" Background="White" Foreground="#FF323232" BorderBrush="#00000000" Click="fileAdder_Click" BorderThickness="0"/>
+            <Button Name="fileAdder" Content="#" Grid.Row="4" Grid.Column="0" Margin="15,7.5,7.5,15" Height="50" Width="35" FontSize="30" Background="White" Foreground="#FF0097FF" BorderBrush="#00000000" Click="fileAdder_Click" BorderThickness="0"/>
             <TextBox Text="Ошибка" Name="clientsBox" Grid.Row="0" Grid.Column="2" Margin="7.5,15,15,7.5" TextWrapping="Wrap" VerticalContentAlignment="Top" BorderBrush="#00000000" Padding="10" FontSize="15" BorderThickness="0"/>
         </Grid>
-        <Border CornerRadius="15" Name="bottomButton" Height="50" Width="60" Canvas.Bottom="150" MouseDown="bottomButton_Click" Margin="15,0,0,7.5" Background="White">
-            <TextBox FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Text="\/" BorderThickness="0" Background="Transparent"/>
+        <Border CornerRadius="12" Name="bottomButton" Height="50" Width="60" Canvas.Bottom="150" MouseDown="bottomButton_MouseDown"  Margin="15,0,0,7.5" Background="White" BorderThickness="1" BorderBrush="#FF0097FF">
+            <Label Foreground="#FF0097FF"  FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Content="\/"/>
         </Border>
     </Canvas>
 </Window>

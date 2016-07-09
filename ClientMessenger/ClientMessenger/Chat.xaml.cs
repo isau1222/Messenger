@@ -39,9 +39,9 @@ namespace ClientMessenger
         const int port =8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        const string address = "128.204.8.36";//andrew
+        //const string address = "128.204.8.36";//andrew
         //const string address = "10.210.51.4";//uni    
-        //const string address = "192.168.3.8";//yula
+        const string address = "192.168.3.8";//yula
         //const string address = "79.111.23.247";//andr
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
@@ -516,11 +516,6 @@ namespace ClientMessenger
             }
         }
 
-        private void bottomButton_Click(object sender, RoutedEventArgs e)
-        {
-            MessageControl.ScrollToBottom(scrollViewer);
-        }
-
         private void turnLeft_MouseDown(object sender, MouseButtonEventArgs e)
         {
             GetterMessages.myPlayer.Close();
@@ -589,6 +584,11 @@ namespace ClientMessenger
             grid.Width = ((Panel)window.Content).ActualWidth;
             grid.Height = ((Panel)window.Content).ActualHeight;
             Canvas.SetBottom(bottomButton, sendRow.ActualHeight);
+        }
+
+        private void bottomButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageControl.ScrollToBottom(scrollViewer);
         }
     }
 }
