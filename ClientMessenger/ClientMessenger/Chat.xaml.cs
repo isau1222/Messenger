@@ -324,7 +324,9 @@ namespace ClientMessenger
                     {
                         ShowMyError("Неправильное расширение!");
                     }
+
                 }
+                GC.Collect();
             }
             catch (Exception ex)
             {
