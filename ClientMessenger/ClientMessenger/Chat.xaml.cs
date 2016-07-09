@@ -92,7 +92,7 @@ namespace ClientMessenger
             TurnOffAll(); //restart services (thread, client, stream)
 
             repeateButton.Visibility = Visibility.Collapsed; //прячем кнопку репит
-            bottomButton.Visibility = Visibility.Collapsed; //прячем кнопку репит
+            bottomButton.Visibility = Visibility.Collapsed;
 
             sendButton.IsEnabled = true; //делаем кнопку отправки сообщений активной (мы выключим её, если что-то пойдёт не так)
 
@@ -499,10 +499,6 @@ namespace ClientMessenger
             {
                 MessageControl.ScrollToBottom(scrollViewer);
             }
-            //else
-            //{
-            //    bottomButton.Visibility = Visibility.Visible;
-            //}
         }
 
         private void scrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -584,6 +580,13 @@ namespace ClientMessenger
                 GetterMessages.isPlay = true;
                 soundBorders[soundBorderNum].Background = Brushes.YellowGreen;
             }
+        }
+
+        private void Window_LayoutUpdated(object sender, EventArgs e)
+        {
+            grid.Width = ((Panel)window.Content).ActualWidth;
+            grid.Height = ((Panel)window.Content).ActualHeight;
+            Canvas.SetBottom(bottomButton, sendRow.ActualHeight);
         }
     }
 }
