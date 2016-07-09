@@ -166,6 +166,7 @@ namespace ClientMessenger
 
             myImage.Margin = SetMargin(5);
             myImage.HorizontalAlignment = HorizontalAlignment.Left; //по умолчанию картинка будем жаться к левому боку, потому что чужие сообщения слева
+            myImage.UseLayoutRounding = true;
             //но вот когда мы хотим отправить такую штуку, мы помимо этого статического метода CreateImage(source) пишем в создавшийся Image: 
             //image.HorizontalAlignment = HorizontalAlignment.Right; потому что мы отправитель и должны видеть наше детище справа
             return myImage;

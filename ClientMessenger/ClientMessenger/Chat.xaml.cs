@@ -337,58 +337,25 @@ namespace ClientMessenger
         void specialBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
             MyBorder br = soundBorders[(sender as MyBorder).myNum];
-            soundBorders[soundBorderNum].Background = Brushes.LightGray;
-            br.Background = Brushes.LightGray;
-            soundBorderNum = br.myNum;
-
-            if (playerPanel.Visibility == Visibility.Collapsed)
-            {
-                playerPanel.Visibility = Visibility.Visible;
-            }
-
-            if (GetterMessages.myPlayer != null && GetterMessages.myPlayer.Source == new Uri(br.myText, UriKind.Absolute))
-            {
-
-                if (GetterMessages.isPlay)
-                {
-                    turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Play);
-                    GetterMessages.myPlayer.Pause();
-                    GetterMessages.isPlay = false;
-                    br.Background = Brushes.LightGreen;
-                }
-                else
-                {
-                    turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
-                    GetterMessages.myPlayer.Play();
-                    GetterMessages.isPlay = true;
-                    br.Background = Brushes.YellowGreen;
-                }
-            }
-            else
-            {
-                if (GetterMessages.myPlayer != null)
-                    GetterMessages.myPlayer.Close();
-                GetterMessages.myPlayer = new MediaElement();
-                GetterMessages.myPlayer.UnloadedBehavior = MediaState.Manual;
-                GetterMessages.myPlayer.Source = new Uri(br.myText, UriKind.Absolute);
-                GetterMessages.myPlayer.Play();
-                GetterMessages.isPlay = true;
-                br.Background = Brushes.YellowGreen;
-                turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
-            }
+            SoundBorderClick(br);
         }
 
         public void border_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            SoundBorderClick(sender as MyBorder);
+        }
+
+        void SoundBorderClick(MyBorder border)
+        {
             soundBorders[soundBorderNum].Background = Brushes.LightGray;
-            soundBorderNum = (sender as MyBorder).myNum;
-           
+            soundBorderNum = border.myNum;
+
             if (playerPanel.Visibility == Visibility.Collapsed)
             {
                 playerPanel.Visibility = Visibility.Visible;
             }
 
-            if (GetterMessages.myPlayer != null && GetterMessages.myPlayer.Source == new Uri((sender as MyBorder).myText, UriKind.Absolute))
+            if (GetterMessages.myPlayer != null && GetterMessages.myPlayer.Source == new Uri(border.myText, UriKind.Absolute))
             {
 
                 if (GetterMessages.isPlay)
@@ -396,14 +363,14 @@ namespace ClientMessenger
                     turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Play);
                     GetterMessages.myPlayer.Pause();
                     GetterMessages.isPlay = false;
-                    (sender as MyBorder).Background = Brushes.LightGreen;
+                    border.Background = Brushes.LightGreen;
                 }
                 else
                 {
                     turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
                     GetterMessages.myPlayer.Play();
                     GetterMessages.isPlay = true;
-                    (sender as MyBorder).Background = Brushes.YellowGreen;
+                    border.Background = Brushes.YellowGreen;
                 }
             }
             else
@@ -412,10 +379,10 @@ namespace ClientMessenger
                     GetterMessages.myPlayer.Close();
                 GetterMessages.myPlayer = new MediaElement();
                 GetterMessages.myPlayer.UnloadedBehavior = MediaState.Manual;
-                GetterMessages.myPlayer.Source = new Uri((sender as MyBorder).myText, UriKind.Absolute);
+                GetterMessages.myPlayer.Source = new Uri(border.myText, UriKind.Absolute);
                 GetterMessages.myPlayer.Play();
                 GetterMessages.isPlay = true;
-                (sender as MyBorder).Background = Brushes.YellowGreen;
+                border.Background = Brushes.YellowGreen;
                 turnPlayer.Source = CreateBrushFromBitmap(Properties.Resources.Pause);
             }
         }
