@@ -10,12 +10,18 @@ namespace ConsoleServer
     class Program
     {
         //const string ip = "192.168.1.19";//doma
-        //const string ip = "128.204.8.36";//andrew
-        const string ip = "192.168.3.8";//yula
+        const string ip = "128.204.14.239";//andrew
+        //const string ip = "192.168.3.8";//yula
         //const string ip = "10.210.51.4";//uni
         //const string ip = "192.168.70.1";
         const int port = 8080;
-        static TcpListener listener;
+        static Socket listener;
+
+        public static Socket GetDeafultSocket()
+        {
+            return new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        }
+
         static void Main(string[] args)
         {
             StartListener:
@@ -23,8 +29,10 @@ namespace ConsoleServer
             Console.WriteLine(GetMyIp().ToString()); //просто смотрю, что даёт эта функция
             try
             {
-                listener = new TcpListener(IPAddress.Parse(ip), port);
-                listener.Start(); //создаём слушателя
+                IPEndPoint myServerEndP = new IPEndPoint(IPAddress.Parse(ip), port);
+                listener = GetDeafultSocket();
+                listener.Bind(myServerEndP); //создаём слушателя
+                listener.Listen(20);
                 Console.WriteLine("Мои IP: " + ip + ":" + port);
                 Console.WriteLine("Ожидание подключений...");
 
@@ -32,7 +40,7 @@ namespace ConsoleServer
                 {
                     //нужно понимать, что clientObject - это не клент, с которым мы работаем, 
                     //а объект, который обслуживает клиента, с которым мы работаем
-                    TcpClient client = listener.AcceptTcpClient(); //клиент нашелся
+                    Socket client = listener.Accept(); //клиент нашелся
                     ClientObject clientObject = new ClientObject(client, clientObjects);//создаем clientObject (посылаем ему инфу с каким клиентом он работает 
                     //и список clientObject, чтобы он мог находить других клиентов и общаться с ними тоже)
                     clientObjects.Add(clientObject); //добавляем его в наш список (хорошо, что это объект и все clientObject имеют свежую инфу об этом листе)
@@ -50,7 +58,7 @@ namespace ConsoleServer
             finally
             {
                 if (listener != null)
-                    listener.Stop();
+                    listener.Dispose();
             }
         }
 

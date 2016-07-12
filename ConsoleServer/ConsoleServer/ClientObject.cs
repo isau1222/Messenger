@@ -10,17 +10,17 @@ namespace ConsoleServer
     //это вторая глава. третья - Message (из библиотеки)
     public class ClientObject
     {
-        public TcpClient client;
+        public Socket client;
         public NetworkStream stream;
 
         List<ClientObject> clientObjects;
         string clientName; //у каждого клиента есть имя (то же, что и когда авторизовываемся)
 
-        public ClientObject(TcpClient tcpClient, List<ClientObject> _clientObjects) //получаем с кем работать и инфу о всех clientObjects
+        public ClientObject(Socket tcpClient, List<ClientObject> _clientObjects) //получаем с кем работать и инфу о всех clientObjects
         {
             client = tcpClient;
             clientObjects = _clientObjects;
-            stream = client.GetStream();
+            stream = new NetworkStream(client);
             clientName = ""; 
         }
 

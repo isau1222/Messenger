@@ -34,14 +34,14 @@ namespace ClientMessenger
         public static int IDFile = 0;
         NetworkStream stream;
         TextBox clientsBox;
-        TcpClient client;
+        Socket client;
 
         Chat chat;
         string clientName;
 
         //передаём нашему объекту информацию о том, кто является TcpClient клиентом, передаём стрим, передаём контрол клиетБокс (там пишется кто сейчас на сервере)
         //передаём наше главное окно (Chat), передаём имя клиента (введенное при авторизации)
-        public GetterMessages(TcpClient _client, NetworkStream _stream, TextBox _clientsBox, Chat _chat, string _clientName)
+        public GetterMessages(Socket _client, NetworkStream _stream, TextBox _clientsBox, Chat _chat, string _clientName)
         {
             stream = _stream;
             client = _client;

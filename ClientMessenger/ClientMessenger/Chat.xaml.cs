@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Speech.Synthesis;
@@ -34,14 +35,14 @@ namespace ClientMessenger
     public partial class Chat : Window
     {
         NetworkStream stream;
-        TcpClient client;
+        Socket client;
         Thread threadNet; //поток дляпринимателя сообщений
         const int port =8080;
         //const string address = "95.73.181.69";
         //const string address = "192.168.1.19";//doma
-        //const string address = "128.204.8.36";//andrew
+        const string address = "128.204.14.239";//andrew
         //const string address = "10.210.51.4";//uni    
-        const string address = "192.168.3.8";//yula
+        //const string address = "192.168.3.8";//yula
         //const string address = "79.111.23.247";//andr
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
@@ -86,6 +87,11 @@ namespace ClientMessenger
             return Imaging.CreateBitmapSourceFromHBitmap(bmp.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
         }
 
+        public static Socket GetDeafultSocket()
+        {
+            return new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        }
+
         void Connect()
         {
             canScrollBottom = true;
@@ -98,8 +104,12 @@ namespace ClientMessenger
 
             try
             {
-                client = new TcpClient(address, port);
-                stream = client.GetStream();
+
+
+                client = GetDeafultSocket();
+                IPEndPoint myServerEndP = new IPEndPoint(IPAddress.Parse(address), port);
+                client.Connect(myServerEndP);
+                stream = new NetworkStream(client);
 
                 GetterMessages getterMes = new GetterMessages(client, stream, clientsBox, this, clientName); //создаем объект GetterMessages. он будет отвечать за отдельным поток по принятию сообщений
                 //ведь нам нужно клиенту дать 2 потока - один для отдачи, один для приема
