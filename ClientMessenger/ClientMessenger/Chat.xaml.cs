@@ -41,7 +41,8 @@ namespace ClientMessenger
         //const string address = "192.168.1.19";//doma
         //const string address = "128.204.8.36";//andrew
         //const string address = "10.210.51.4";//uni    
-        const string address = "192.168.3.8";//yula
+        //const string address = "192.168.3.8";//yula 52.57.10.104
+        const string address = "52.57.10.104";//aws.amazon
         //const string address = "79.111.23.247";//andr
         //const string address = "95.72.62.103";
         //const string address = "95.73.213.161";
